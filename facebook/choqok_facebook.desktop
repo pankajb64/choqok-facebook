@@ -1,0 +1,18 @@
+[Desktop Entry]
+Comment=Facebook.com Service
+Encoding=UTF-8
+Icon=facebook_microblog
+Name=Facebook
+ServiceTypes=Choqok/Plugin
+Type=Service
+X-Choqok-Version=1
+X-KDE-Library=choqok_facebook
+X-KDE-PluginInfo-Author=Pankaj Bhambhani
+X-KDE-PluginInfo-Category=MicroBlogs
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-Email=pankajb64@gmail.com
+X-KDE-PluginInfo-EnabledByDefault=false
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-Name=choqok_facebook
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=http://www.pankajb64.co.nr

@@ -1,0 +1,28 @@
+choqok-facebook
+A Facebook Plugin for Choqok
+Choqok is a KDE Micro-Blogging client - More Information at http://choqok.gnufolks.org,
+
+Authors:
+    Pankaj Bhambhani <pankajb64@gmail.com>
+
+License:
+    GNU GPL v2 or v3 or Later
+
+Requirements to build:
+     Choqok
+     KFacebook ( found in Akonadi Facebook Resource - https://projects.kde.org/projects/playground/pim/akonadi-facebook )
+
+How To Build The Project
+-=-=-=-=-=-=-=-=-=-=-=-=-=
+$ cd choqok-facebook-src-root-dir [It's choqok-facebook]
+$ mkdir build
+$ cd build
+$ cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` ..
+$ make
+$ sudo make install OR su -c 'make install'
+
+to uninstall the project:
+$ make uninstall or su -c 'make uninstall'
+
+
+Feel free to email me.
