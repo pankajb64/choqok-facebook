@@ -10,7 +10,7 @@ License:
 
 Requirements to build:
      Choqok
-     KFacebook ( found in Akonadi Facebook Resource - https://projects.kde.org/projects/playground/pim/akonadi-facebook )
+     KFacebook ( https://projects.kde.org/projects/kdereview/libkfacebook/repository )
 
 How To Build The Project
 -=-=-=-=-=-=-=-=-=-=-=-=-=
