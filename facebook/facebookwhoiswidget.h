@@ -48,8 +48,8 @@
 #include <notifymanager.h>
 #include <choqoktools.h>
 #include <QtCore/QPointer>
-#include <kfacebook/userinfojob.h>
-#include <kfacebook/userinfo.h>
+#include <libkfbapi/userinfojob.h>
+#include <libkfbapi/userinfo.h>
 #include "facebookutil.h"
 
 class FacebookWhoisWidget : public QFrame

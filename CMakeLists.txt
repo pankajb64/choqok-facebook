@@ -8,7 +8,7 @@ set(CHOQOK_FACEBOOK_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 set(CMAKE_MODULE_PATH ${CHOQOK_FACEBOOK_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
 find_package(KdepimLibs REQUIRED)
-find_package(KFacebook REQUIRED)
+find_package(KFBAPI REQUIRED)
 
 find_package(Choqok REQUIRED)
 find_package(QJson REQUIRED)

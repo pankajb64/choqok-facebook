@@ -28,7 +28,7 @@
 #include "facebookpost.h"
 #include <KJob>
 
-using namespace KFacebook;
+using namespace KFbAPI;
 
 /*namespace Choqok
 {

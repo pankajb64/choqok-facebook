@@ -37,14 +37,14 @@
 #include <QtGui/QtGui>
 #include <QtGui/QLayout>
 #include <KMessageBox>
-#include <kfacebook/getlikesjob.h>
-#include <kfacebook/getcommentsjob.h>
+#include <libkfbapi/getlikesjob.h>
+#include <libkfbapi/getcommentsjob.h>
 #include "facebookinputdialog.h"
-#include <kfacebook/postjob.h>
-#include <kfacebook/notificationsmarkreadjob.h>
+#include <libkfbapi/postjob.h>
+#include <libkfbapi/notificationsmarkreadjob.h>
 #include "choqokuiglobal.h"
 
-using namespace KFacebook;
+using namespace KFbAPI;
 
 const KIcon FacebookPostWidget::unFavIcon(Choqok::MediaManager::convertToGrayScale(KIcon("rating").pixmap(16)) );
 

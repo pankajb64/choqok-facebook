@@ -39,8 +39,8 @@
 #include <kio/accessmanager.h>
 #include <QCheckBox>
 #include <KInputDialog>
-#include <kfacebook/authenticationdialog.h>
-#include <kfacebook/userinfojob.h>
+#include <libkfbapi/authenticationdialog.h>
+#include <libkfbapi/userinfojob.h>
 #include <notifymanager.h>
 
 FacebookEditAccountWidget::FacebookEditAccountWidget(FacebookMicroBlog *microblog, FacebookAccount* account, QWidget* parent) : ChoqokEditAccountWidget(account, parent), mBlog(microblog), mAccount(account)

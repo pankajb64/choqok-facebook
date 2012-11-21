@@ -24,7 +24,7 @@
 #include "facebookaccount.h"
 #include "facebookmicroblog.h"
 #include <KDebug>
-#include <kfacebook/userinfojob.h>
+#include <libkfbapi/userinfojob.h>
 
 class FacebookAccount::Private
 {

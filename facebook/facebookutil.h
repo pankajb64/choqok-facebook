@@ -26,12 +26,12 @@
 
 #include <QString>
 #include "facebookaccount.h"
-#include <kfacebook/likeinfo.h>
-#include <kfacebook/commentinfo.h>
-#include <kfacebook/propertyinfo.h>
+#include <libkfbapi/likeinfo.h>
+#include <libkfbapi/commentinfo.h>
+#include <libkfbapi/propertyinfo.h>
 #include <algorithm>
 
-using namespace KFacebook;
+using namespace KFbAPI;
 
 QString assignOrNull(QString s);
 

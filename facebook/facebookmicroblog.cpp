@@ -26,10 +26,10 @@
 #include <KGenericFactory>
 #include "facebookaccount.h"
 #include <KMessageBox>
-#include <kfacebook/postinfo.h>
-#include <kfacebook/postjob.h>
-#include <kfacebook/postaddjob.h>
-#include <kfacebook/postslistjob.h>
+#include <libkfbapi/postinfo.h>
+#include <libkfbapi/postjob.h>
+#include <libkfbapi/postaddjob.h>
+#include <libkfbapi/postslistjob.h>
 #include "accountmanager.h"
 #include "editaccountwidget.h"
 #include "facebookeditaccountwidget.h"
@@ -49,8 +49,8 @@
 #include <KAction>
 #include <QMenu>
 #include "facebookviewdialog.h"
-#include <kfacebook/notificationslistjob.h>
-#include <kfacebook/userinfojob.h>
+#include <libkfbapi/notificationslistjob.h>
+#include <libkfbapi/userinfojob.h>
 
 K_PLUGIN_FACTORY( MyPluginFactory, registerPlugin < FacebookMicroBlog > (); )
 K_EXPORT_PLUGIN( MyPluginFactory( "choqok_facebook" ) )

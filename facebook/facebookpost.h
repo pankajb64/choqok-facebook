@@ -24,10 +24,10 @@
 #ifndef FACEBOOKPOST_H
 #define FACEBOOKPOST_H
 
-#include <kfacebook/postinfo.h>
+#include <libkfbapi/postinfo.h>
 #include <choqoktypes.h>
 
-using namespace KFacebook;
+using namespace KFbAPI;
 
 class FacebookPost : public Choqok::Post
 {

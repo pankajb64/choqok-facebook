@@ -24,15 +24,15 @@
 #ifndef FACEBOOKMICROBLOG_H
 #define FACEBOOKMICROBLOG_H
 #include "microblog.h" 
-#include <kfacebook/facebookjobs.h>
-#include <kfacebook/postinfo.h>
-#include <kfacebook/userinfo.h>
-#include <kfacebook/notificationinfo.h>
+#include <libkfbapi/facebookjobs.h>
+#include <libkfbapi/postinfo.h>
+#include <libkfbapi/userinfo.h>
+#include <libkfbapi/notificationinfo.h>
 #include "facebookpost.h"
 #include <QStringList>
 #include "facebookinputdialog.h"
 
-using namespace KFacebook;
+using namespace KFbAPI;
 
 class FacebookAccount;
 //class KJob;
