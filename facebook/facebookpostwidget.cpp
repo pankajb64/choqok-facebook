@@ -555,8 +555,8 @@ void FacebookPostWidget::slotUpdateLikeString(KJob * job)
 		FacebookPost* post = static_cast<FacebookPost*>(currentPost());
 		FacebookAccount* acc = qobject_cast<FacebookAccount*>(currentAccount());
 		
-		LikeInfoPtr likes = postJob->postInfo()[0]->likes();
-		QString likeString = likes.isNull() ? "" : createLikeString(acc, likes);
+		LikeInfo likes = postJob->postInfo()[0].likes();
+		QString likeString = createLikeString(acc, likes);
 		likeString += " Click to see who all like this";
 		post->likeString =  likeString;
 		updateLikeAndCommentCounts();
@@ -587,8 +587,8 @@ void FacebookPostWidget::slotUpdateCommentString(KJob * job)
 		FacebookPost* post = static_cast<FacebookPost*>(currentPost());
 		FacebookAccount* acc = qobject_cast<FacebookAccount*>(currentAccount());
 		
-		CommentInfoPtr comments = postJob->postInfo()[0]->comments();
-		QString commentString =  comments.isNull()  ? "" : createCommentString(acc, comments);
+		CommentInfo comments = postJob->postInfo()[0].comments();
+		QString commentString =  createCommentString(acc, comments);
 		commentString += " Click to see who all comments"; 
 		post->commentString =  commentString   ;
 		updateLikeAndCommentCounts();

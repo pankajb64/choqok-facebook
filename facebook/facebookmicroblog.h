@@ -62,9 +62,9 @@ class FacebookMicroBlog : public Choqok::MicroBlog
     virtual void setTimelineInfos();
     virtual void setUserTimelines(FacebookAccount* theAccount, const QStringList& lists);
     virtual void aboutToUnload();
-    virtual QList <Choqok::Post * > toChoqokPost(FacebookAccount* account, PostInfoList mPosts) const;
-    virtual QList <Choqok::Post * > toChoqokPost(FacebookAccount* account, NotificationInfoList notifications) const;
-    virtual Choqok::User toChoqokUser(FacebookAccount* account, UserInfoPtr userInfo) const;
+    virtual QList <Choqok::Post * > toChoqokPost(FacebookAccount* account, QList<PostInfo> mPosts) const;
+    virtual QList <Choqok::Post * > toChoqokPost(FacebookAccount* account, QList<NotificationInfo> notifications) const;
+    virtual Choqok::User toChoqokUser(FacebookAccount* account, UserInfo userInfo) const;
     virtual QString profileUrl(Choqok::Account* account, const QString& username) const;
     virtual QString postUrl(Choqok::Account* account, const QString& username, const QString& postId) const;
     virtual QString facebookUrl(Choqok::Account* account, const QString& username) const;

@@ -37,11 +37,11 @@ QString assignOrNull(QString s);
 
 QString getImageUrl(const QString& linkUrl);
 
-QString createLikeString(const FacebookAccount* account, const LikeInfoPtr likes) ;
+QString createLikeString(const FacebookAccount* account, const LikeInfo &likes) ;
 
-QString createCommentString(const FacebookAccount* account, const CommentInfoPtr comments) ;
+QString createCommentString(const FacebookAccount* account, const CommentInfo &comments) ;
 
-QString createPropertyString(const QList<PropertyInfoPtr> properties);
+QString createPropertyString(const QList<PropertyInfo> properties);
 
 QString trimName(const QString name);
 

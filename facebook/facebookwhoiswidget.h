@@ -87,7 +87,7 @@ private:
     const Choqok::Post* currentPost;
     QString userId;
     QString errorMessage;
-    UserInfoPtr currentUserInfo;
+    UserInfo* currentUserInfo;
 };
 
 #endif

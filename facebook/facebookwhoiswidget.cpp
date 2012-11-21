@@ -92,9 +92,9 @@ void FacebookWhoisWidget::userInfoReceived(KJob* job)
     }
     UserInfoJob *ujob = qobject_cast<UserInfoJob *>(job);
     
-    UserInfoPtr userInfo = ujob->userInfo();
+    UserInfo userInfo = ujob->userInfo();
     
-    currentUserInfo = userInfo;
+    currentUserInfo = &userInfo;
     
     updateHtml();
     showForm();
@@ -139,7 +139,7 @@ void FacebookWhoisWidget::updateHtml()
     kDebug();
     QString html;
     if( errorMessage.isEmpty() ) {
-		QString url = currentUserInfo->website().isEmpty() ? QString() : QString("<a title='%1' href='%1'>%1</a>").arg(currentUserInfo->website()); 
+		QString url = currentUserInfo->website().isEmpty() ? QString() : QString("<a title='%1' href='%1'>%1</a>").arg(currentUserInfo->website().toString()); 
         
         QString mainTable = QString("<table width='100%'><tr>\
         <td width=49><img width=48 height=48 src='img://profileImage'/></td>\

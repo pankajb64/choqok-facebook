@@ -181,9 +181,9 @@ void FacebookEditAccountWidget::userInfoJobDone( KJob* job )
   UserInfoJob *  userInfoJob = dynamic_cast<UserInfoJob*>( job );
   Q_ASSERT( userInfoJob );
   if ( !userInfoJob->error() ) {
-    mAccount->setUsername( userInfoJob->userInfo()->username() );
-    mAccount->setId(userInfoJob->userInfo()->id() );
-    mAccount->setName (userInfoJob->userInfo()->name() );
+    mAccount->setUsername( userInfoJob->userInfo().username() );
+    mAccount->setId(userInfoJob->userInfo().id() );
+    mAccount->setName (userInfoJob->userInfo().name() );
     username = mAccount->username();
     name = mAccount->name();
     id = mAccount->id();

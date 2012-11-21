@@ -41,23 +41,23 @@ QString getImageUrl(const QString& linkUrl)
 
 
 
-QString createLikeString(const FacebookAccount* account, const LikeInfoPtr likes) 
+QString createLikeString(const FacebookAccount* account, const LikeInfo &likes) 
 {
-	int count = likes->count();
+	int count = likes.count();
 	QString string = "";
 	
 	int ct = 0;
 	
-	QList<UserInfoPtr> users = likes->data();
+	QList<UserInfo> users = likes.data();
 	
 	if (!users.isEmpty())
 	{
-		foreach ( UserInfoPtr user, users)
+		foreach ( UserInfo user, users)
 		{
-			string += (account->id() == user->id()) ? "You" : trimName(user->name());
-			if ( user == users[users.length() - 1] )
+			string += (account->id() == user.id()) ? "You" : trimName(user.name());
+			if ( ct == users.length() - 1 )
 			   string += "";
-			else if (users.length() > 1 && user == users[users.length() - 2] && count == users.length() )
+			else if (users.length() > 1 && ct == users.length() - 2 && count == users.length() )
 			   string += " and ";
 			else
 			   string  += ", ";
@@ -89,23 +89,23 @@ QString createLikeString(const FacebookAccount* account, const LikeInfoPtr likes
 	return string;
 }
 
-QString createCommentString(const FacebookAccount* account, const CommentInfoPtr comments) 
+QString createCommentString(const FacebookAccount* account, const CommentInfo &comments) 
 {
-	int count = comments->count();
+	int count = comments.count();
 	QString string = "";
 	
-	QList<CommentDataPtr> list = comments->data();
+	QList<CommentData> list = comments.data();
 	int ct = 0;
 	
 	if (!list.isEmpty())
 	{
-		foreach ( CommentDataPtr comment, list)
+		foreach ( CommentData comment, list)
 		{
-			string += (account->id() == comment->from()->id()) ? "You" : trimName(comment->from()->name());
+			string += (account->id() == comment.from().id()) ? "You" : trimName(comment.from().name());
 			
-			if ( comment == list[list.length() - 1] )
+			if ( ct == list.length() - 1 )
 			   string += "";
-			else if (list.length() > 1 && comment == list[list.length() - 2] && count == list.length() )
+			else if (list.length() > 1 && ct == list.length() - 2 && count == list.length() )
 			   string += " and ";
 			else
 			   string  += ", ";
@@ -132,17 +132,17 @@ QString createCommentString(const FacebookAccount* account, const CommentInfoPtr
 }
 
 
-QString createPropertyString(const QList<PropertyInfoPtr> properties)
+QString createPropertyString(const QList<PropertyInfo> properties)
 {
 	QString string = "";
 	
-	foreach(PropertyInfoPtr property, properties)
+	foreach(PropertyInfo property, properties)
 	{
-		QUrl url(property->href());
+		QUrl url(property.href());
 		url.setScheme("property");
 		QString href = url.toString();
-		QString name  = property->name().trimmed();
-		string += QString("%1 %4 <a href=\"%3\">%2</a><br/>").arg(name).arg(property->text()).arg(href).arg(name.isEmpty() ? "" : " : " );
+		QString name  = property.name().trimmed();
+		string += QString("%1 %4 <a href=\"%3\">%2</a><br/>").arg(name).arg(property.text()).arg(href).arg(name.isEmpty() ? "" : " : " );
 	}
 	return string;
 }

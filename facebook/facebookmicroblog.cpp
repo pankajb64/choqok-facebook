@@ -474,43 +474,43 @@ QString FacebookMicroBlog::facebookUrl(Choqok::Account* acc, const QString& user
 }
 
 
-QList<Choqok::Post *> FacebookMicroBlog::toChoqokPost(FacebookAccount* account, PostInfoList mPosts) const
+QList<Choqok::Post *> FacebookMicroBlog::toChoqokPost(FacebookAccount* account, QList<PostInfo> mPosts) const
 {
  
   QList<Choqok::Post*> list ;
-  PostInfoPtr p;
+  PostInfo p;
   
   foreach ( p, mPosts)
   {
-	  PostInfo * postInfo = p.data();
+	  PostInfo * postInfo = &p;
 	  FacebookPost * post = new FacebookPost ();
 	  post->postId = assignOrNull(postInfo->id());
 	  post->author = toChoqokUser( account, postInfo->from());
-	  post->author.profileImageUrl = "https://graph.facebook.com/" + postInfo->from()->id() + "/picture" ; 
+	  post->author.profileImageUrl = "https://graph.facebook.com/" + postInfo->from().id() + "/picture" ; 
 	  post->content = assignOrNull(postInfo->message());
-	  post->link = assignOrNull(postInfo->link());
+	  post->link = assignOrNull(postInfo->link().toString());
 	  post->title = assignOrNull(postInfo->name());
 	  post->caption = assignOrNull(postInfo->caption());
 	  post->description = assignOrNull(postInfo->description());
-	  post->iconUrl = assignOrNull(postInfo->pictureUrl()); //assignOrNull(postInfo->icon());
+	  post->iconUrl = assignOrNull(postInfo->pictureUrl().toString()); //assignOrNull(postInfo->icon());
 	  //post->properties = postInfo->properties();
 	  post->type = assignOrNull(postInfo->type());
-	  post->source = assignOrNull(postInfo->source());
-	  post->likeCount = postInfo->likes().isNull() ?  "0" : QString::number(postInfo->likes()->count()); //+ " likes";
-	  QString likeString =  postInfo->likes().isNull() ? "" : createLikeString(account, postInfo->likes());
+	  post->source = assignOrNull(postInfo->sourceUrl().toString());
+      post->likeCount = QString::number(postInfo->likes().count()); //+ " likes";
+	  QString likeString =  createLikeString(account, postInfo->likes());
 	  likeString += " Click to see who all like this";   
 	  post->likeString = likeString;
 	  post->story = assignOrNull(postInfo->story());
-	  post->commentCount = postInfo->comments().isNull() ?  "0" : QString::number(postInfo->comments()->count()); // + " comments";
-	  QString commentString = postInfo->comments().isNull() ? "" : createCommentString(account, postInfo->comments());
+	  post->commentCount = QString::number(postInfo->comments().count()); // + " comments";
+	  QString commentString = createCommentString(account, postInfo->comments());
 	  commentString += 	" Click to see all comments";
 	  post->commentString = commentString;
-	  post->propertyString = postInfo->properties().isEmpty() ? "" : createPropertyString(postInfo->properties());
-	  post->appId = postInfo->application().isNull() ?  "" : postInfo->application()->id();
-	  post->appName = postInfo->application().isNull() ?  "" : postInfo->application()->name();
+	  post->propertyString = createPropertyString(postInfo->properties());
+	  post->appId = postInfo->application().id();
+	  post->appName =  postInfo->application().name();
 	  post->creationDateTime = postInfo->createdTime().dateTime();
 	  post->updateDateTime = postInfo->updatedTime().dateTime();
-	  post->isRead = (postInfo->from()->id() == account->id());
+	  post->isRead = (postInfo->from().id() == account->id());
   
       //post->content = prepareStatus(post);
       
@@ -520,35 +520,35 @@ QList<Choqok::Post *> FacebookMicroBlog::toChoqokPost(FacebookAccount* account, 
   return list;
 }
 
-Choqok::User FacebookMicroBlog::toChoqokUser(FacebookAccount* account, UserInfoPtr userInfo) const
+Choqok::User FacebookMicroBlog::toChoqokUser(FacebookAccount* account, UserInfo userInfo) const
 {
 	Choqok::User * user = new Choqok::User();
 	
-	user->userId = userInfo->id();
-	user->userName = userInfo->username().isNull() ? userInfo->id() : userInfo->username() ;
-	user->realName = (account->id() == userInfo->id()) ? "You" : userInfo->name();
+	user->userId = userInfo.id();
+	user->userName = userInfo.username().isNull() ? userInfo.id() : userInfo.username() ;
+	user->realName = (account->id() == userInfo.id()) ? "You" : userInfo.name();
 	
 	return *user;
 }
 
 
-QList<Choqok::Post*> FacebookMicroBlog::toChoqokPost(FacebookAccount* account, NotificationInfoList notifications) const
+QList<Choqok::Post*> FacebookMicroBlog::toChoqokPost(FacebookAccount* account, QList<NotificationInfo> notifications) const
 {
   QList<Choqok::Post*> list ;
-  NotificationInfoPtr n;
+  NotificationInfo n;
   
   foreach ( n, notifications)
   {
-	  NotificationInfo * notificationInfo = n.data();
+	  NotificationInfo * notificationInfo = &n;
 	  FacebookPost * post = new FacebookPost ();
 	  post->postId = assignOrNull(notificationInfo->id());
 	  post->author = toChoqokUser( account, notificationInfo->from());
-	  post->author.profileImageUrl = "https://graph.facebook.com/" + notificationInfo->from()->id() + "/picture" ; 
+	  post->author.profileImageUrl = "https://graph.facebook.com/" + notificationInfo->from().id() + "/picture" ; 
 	  post->title = assignOrNull(notificationInfo->title());
-	  post->link = assignOrNull(notificationInfo->link());
+	  post->link = assignOrNull(notificationInfo->link().toString());
 	  post->type = "notification";
-	  post->appId = notificationInfo->application().isNull() ?  "" : notificationInfo->application()->id();
-	  post->appName = notificationInfo->application().isNull() ?  "" : notificationInfo->application()->name();
+	  post->appId = notificationInfo->application().id();
+	  post->appName = notificationInfo->application().name();
 	  post->creationDateTime = notificationInfo->createdTime().dateTime();
 	  post->updateDateTime = notificationInfo->updatedTime().dateTime();
 	  post->isRead = !(notificationInfo->unread());
@@ -724,9 +724,9 @@ void FacebookMicroBlog::userInfoJobDone(KJob* job)
 
 	FacebookAccount* theAccount = mJobsAccount.take(job);
 	
-	UserInfoPtr userInfo = uJob->userInfo();
+	UserInfo userInfo = uJob->userInfo();
 	
-	if (theAccount->id().compare(userInfo->id(), Qt::CaseInsensitive) == 0)
+	if (theAccount->id().compare(userInfo.id(), Qt::CaseInsensitive) == 0)
 	{
 		KMessageBox::information(choqokMainWindow, i18n("This is your own Facebook Id. No Timelines added."));
 	}
@@ -734,7 +734,7 @@ void FacebookMicroBlog::userInfoJobDone(KJob* job)
 	else
 	{
 		QStringList tms = theAccount->timelineNames();
-		QString timelineName = QString("%1/%2").arg(userInfo->name(),  userInfo->id());
+		QString timelineName = QString("%1/%2").arg(userInfo.name(),  userInfo.id());
 		tms.append(timelineName);
 		addTimelineName(timelineName);
 		theAccount->setTimelineNames(tms);
