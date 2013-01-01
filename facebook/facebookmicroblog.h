@@ -23,7 +23,7 @@
 
 #ifndef FACEBOOKMICROBLOG_H
 #define FACEBOOKMICROBLOG_H
-#include "microblog.h" 
+#include "microblog.h"
 #include <libkfbapi/facebookjobs.h>
 #include <libkfbapi/postinfo.h>
 #include <libkfbapi/userinfo.h>
@@ -39,12 +39,11 @@ class FacebookAccount;
 class FacebookMicroBlog : public Choqok::MicroBlog
 {
   Q_OBJECT
-  
+
   public :
     FacebookMicroBlog(QObject * parent,/*const char *name,*/ const QVariantList& args);
     virtual ~FacebookMicroBlog();
-    
-    
+
     virtual ChoqokEditAccountWidget* createEditAccountWidget(Choqok::Account* account, QWidget* parent);
     virtual Choqok::UI::PostWidget* createPostWidget(Choqok::Account* account, Choqok::Post* post, QWidget* parent);
     virtual Choqok::UI::ComposerWidget * createComposerWidget( Choqok::Account *account, QWidget *parent );
@@ -71,9 +70,7 @@ class FacebookMicroBlog : public Choqok::MicroBlog
     virtual uint postCharLimit() const;
     void createPostWithAttachment(Choqok::Account *theAccount, Choqok::Post *post, const QString &mediumToAttach = QString());
     virtual QMenu* createActionsMenu(Choqok::Account* theAccount, QWidget* parent = Choqok::UI::Global::mainWindow());
-    
 
-  
 protected  slots :
   void slotCreatePost(KJob* job);
   void slotTimeLineLoaded(KJob *job);
@@ -82,7 +79,7 @@ protected  slots :
   virtual void showAddTimelineDialog(FacebookAccount *theAccount=0, const QString &toUsername=QString());
   virtual void slotInputEntered(FacebookAccount *theAccount, QString id);
   virtual void userInfoJobDone(KJob* job);
-  
+
   private:
      QMap<KJob*, FacebookAccount*> mJobsAccount;
      QMap<KJob*, Choqok::Post*> mJobsPost;
@@ -91,6 +88,7 @@ protected  slots :
      QMap<KJob*, QString> mJobsTimeline;
      int countOfTimelinesToSave;
      FacebookInputDialog* dialog;
-     
-};   
+
+};
+
 #endif

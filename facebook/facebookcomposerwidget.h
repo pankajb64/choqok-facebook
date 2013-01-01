@@ -39,21 +39,20 @@ class FacebookComposerWidget : public Choqok::UI::ComposerWidget
 
 public:
     explicit FacebookComposerWidget(Choqok::Account* account, QWidget* parent = 0);
-    
-    
-protected slots:	
+
+protected slots:
     virtual void submitPost(const QString& text);
     virtual void slotPostMediaSubmitted(Choqok::Account *theAccount, Choqok::Post* post);
     virtual void selectMediumToAttach();
     virtual void cancelAttachMedium();
-    
+
 private:
     QString mediumToAttach;
     QString mimeType;
     KPushButton *btnAttach;
     QPointer<QLabel> mediumName;
     QPointer<KPushButton> btnCancel;
-    QGridLayout *editorLayout;    
+    QGridLayout *editorLayout;
 };
 
 #endif

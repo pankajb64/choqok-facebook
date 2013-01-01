@@ -41,7 +41,7 @@ FacebookComposerWidget::FacebookComposerWidget(Choqok::Account* account, QWidget
     btnAttach->setIcon(KIcon("image-x-generic"));
     btnAttach->setToolTip(i18n("Attach a photo/Video"));
     btnAttach->setMaximumWidth(btnAttach->height());
-    
+
     connect(btnAttach, SIGNAL(clicked(bool)), this, SLOT(selectMediumToAttach()));
     QVBoxLayout *vLayout = new QVBoxLayout;
     vLayout->addWidget(btnAttach);
@@ -112,7 +112,7 @@ void FacebookComposerWidget::selectMediumToAttach()
                                                       i18n("Select Media to Upload") );
     if( mediumToAttach.isEmpty() )
         return;
-    
+
     QString fileName = KUrl(mediumToAttach).fileName();
     if( !mediumName ){
         kDebug()<<fileName;

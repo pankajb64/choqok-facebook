@@ -30,7 +30,7 @@ FacebookWhoisWidget::FacebookWhoisWidget(FacebookAccount* theAccount, const QStr
 	currentAccount = theAccount;
 	currentPost = post;
 	userId = uId;
-	
+
 
 	setAttribute(Qt::WA_DeleteOnClose);
     loadUserInfo();
@@ -75,7 +75,7 @@ void FacebookWhoisWidget::loadUserInfo()
 {
 	UserInfoJob* job = new UserInfoJob("/" + userId, currentAccount->accessToken());
 	mJob = job;
-	
+
 	connect(job, SIGNAL(result(KJob*)), this, SLOT(userInfoReceived(KJob*)));
 	job->start();
 }
@@ -91,11 +91,11 @@ void FacebookWhoisWidget::userInfoReceived(KJob* job)
         return;
     }
     UserInfoJob *ujob = qobject_cast<UserInfoJob *>(job);
-    
+
     UserInfo userInfo = ujob->userInfo();
-    
+
     currentUserInfo = &userInfo;
-    
+
     updateHtml();
     showForm();
     QString imageUrl = QString("http://graph.facebook.com/%1/picture").arg( currentPost->author.userId );
@@ -108,30 +108,30 @@ void FacebookWhoisWidget::userInfoReceived(KJob* job)
         connect( Choqok::MediaManager::self(), SIGNAL( imageFetched(QString,QPixmap)), this, SLOT(avatarFetched(QString, QPixmap) ) );
         connect( Choqok::MediaManager::self(), SIGNAL(fetchError(QString,QString)), this, SLOT(avatarFetchError(QString,QString)) );
     }
- }   
+ }
 
 void FacebookWhoisWidget::avatarFetched(const QString& remoteUrl, const QPixmap& pixmap)
 {
     kDebug();
-    
+
     QString url = "img://profileImage";
     wid->document()->addResource( QTextDocument::ImageResource, url, pixmap );
     updateHtml();
     disconnect( Choqok::MediaManager::self(), SIGNAL( imageFetched(QString,QPixmap)), this, SLOT(avatarFetched(QString, QPixmap) ) );
     disconnect( Choqok::MediaManager::self(), SIGNAL(fetchError(QString,QString)), this, SLOT(avatarFetchError(QString,QString))  );
-    
+
 }
 
 void FacebookWhoisWidget::avatarFetchError(const QString& remoteUrl, const QString& errMsg)
 {
     kDebug();
     Q_UNUSED(errMsg);
-    
+
     ///Avatar fetching is failed! but will not disconnect to get the img if it fetches later!
     QString url = "img://profileImage";
     wid->document()->addResource( QTextDocument::ImageResource, url, KIcon("image-missing").pixmap(48) );
     updateHtml();
-    
+
 }
 
 void FacebookWhoisWidget::updateHtml()
@@ -139,8 +139,8 @@ void FacebookWhoisWidget::updateHtml()
     kDebug();
     QString html;
     if( errorMessage.isEmpty() ) {
-		QString url = currentUserInfo->website().isEmpty() ? QString() : QString("<a title='%1' href='%1'>%1</a>").arg(currentUserInfo->website().toString()); 
-        
+		QString url = currentUserInfo->website().isEmpty() ? QString() : QString("<a title='%1' href='%1'>%1</a>").arg(currentUserInfo->website().toString());
+
         QString mainTable = QString("<table width='100%'><tr>\
         <td width=49><img width=48 height=48 src='img://profileImage'/></td>\
         <td><table width='100%'><tr><td><font size=5><b>%1</b></font></td>\
@@ -153,7 +153,7 @@ void FacebookWhoisWidget::updateHtml()
         .arg(url);
 
         html = mainTable;
-        
+
     } else {
         html = i18n("<h3>%1</h3>", errorMessage);
     }
@@ -198,7 +198,7 @@ void FacebookWhoisWidget::checkAnchor( const QUrl url )
     if(url.scheme()=="choqok"){
         if(url.host()=="close"){
             this->close();
-        } 
+        }
     } else {
             Choqok::openUrl(url);
             close();

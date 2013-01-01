@@ -53,4 +53,5 @@ QList<T> reverseList( QList<T>&  in ) {
     std::reverse_copy( in.begin(), in.end(), std::back_inserter( result ) );
     return result;
 }
+
 #endif

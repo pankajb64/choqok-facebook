@@ -28,8 +28,6 @@
 #include <QWidget>
 #include "ui_facebookeditaccount_base.h"
 
-
-
 namespace QOAuth {
 class Interface;
 }
@@ -63,7 +61,7 @@ public:
     /**
     * Returns the API Key, APP ID and APP SECRET
     */
-    
+
     static QString appID() ;
     static QString apiKey();
     static QString appSecret();
@@ -73,15 +71,14 @@ protected slots:
     virtual void authenticationDone(const QString& accessToken);
     virtual void showAuthenticationDialog();
     virtual void authenticationCancelled();
-    
+
 protected:
 
-    
     virtual void updateUserName();
-    
     void loadTimelinesTableState();
     void saveTimelinesTableState();
     void setAuthenticated(bool authenticated);
+
     bool isAuthenticated;
     bool mTriggerSync;
     FacebookMicroBlog *mBlog;
@@ -90,7 +87,6 @@ protected:
     QString token;
     QString name;
     QString id;
-
 };
 
 #endif

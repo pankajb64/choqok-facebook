@@ -33,20 +33,19 @@
 class FacebookInputDialog : public KDialog
 {
 	Q_OBJECT
-	
-	
+
 	public:
 	  FacebookInputDialog (FacebookAccount* theAccount,  QString labelText, QString captionText=QString(), QString placeholderText=QString(), bool closewithSignal=false, QWidget* parent=0);
-	
+
 	Q_SIGNALS:
 	  void inputEntered(FacebookAccount*, QString);
-	
+
 	protected slots:
 	  void slotSubmitInput();
-	      
+
 	protected:
 	  void initUi();
-	  
+
     private:
       QLabel* label;
       KLineEdit* lineEdit;

@@ -46,7 +46,7 @@ void FacebookViewDialog::initUi()
   setButtons( KDialog::Cancel );
   setCaption( i18n( "Facebook Post" ) );
   setAttribute( Qt::WA_DeleteOnClose, true );
-  
+
   QWidget * const widget = new QWidget( this );
   QVBoxLayout * const layout = new QVBoxLayout( widget );
   QWidget * const progressWidget = new QWidget( this );
@@ -57,16 +57,16 @@ void FacebookViewDialog::initUi()
   mWebView = new KWebView( this );
   mWebView->setMinimumWidth(1000);
   mWebView->setMinimumHeight(500);
-  
+
   mProgressBar = new QProgressBar( this );
   mProgressBar->setRange( 0, 100 );
   QLabel * const progressLabel = new QLabel( i18n( "Loading Page:" ), this );
   progressLayout->addWidget( progressLabel );
-  progressLayout->addWidget( mProgressBar ); 
-  
+  progressLayout->addWidget( mProgressBar );
+
   layout->addWidget( progressWidget );
   layout->addWidget( mWebView );
-  
+
   connect( this, SIGNAL(cancelClicked()), SIGNAL(canceled()) );
   connect( mWebView, SIGNAL(loadStarted()), progressWidget, SLOT(show()) );
   connect( mWebView, SIGNAL(loadFinished(bool)), progressWidget, SLOT(hide()) );
@@ -82,7 +82,7 @@ void FacebookViewDialog::setLink( const QUrl& link)
 void FacebookViewDialog::start()
 {
 	Q_ASSERT( !mLink.isEmpty() );
-	
+
 	kDebug() << "Showing" << mLink.toString();
     mWebView->setUrl( mLink  );
     show();
@@ -91,7 +91,7 @@ void FacebookViewDialog::start()
 void FacebookViewDialog::urlChanged(const QUrl& url)
 {
 	QString host = url.host();
-	
+
 	if ( !mCloseUrl.isEmpty() && host.contains(mCloseUrl.host(), Qt::CaseInsensitive))
 	{
 		Choqok::NotifyManager::success(i18n("New message submitted successfully ( unless you canceled it explicitly)"));

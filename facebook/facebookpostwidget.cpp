@@ -57,21 +57,21 @@ FacebookPostWidget::FacebookPostWidget(Choqok::Account* account, Choqok::Post* p
 	else
 	{
 		connect(this, SIGNAL(postReaded()), SLOT(markNotificationAsRead()) );
-	}  
+	}
 }
 
 QString FacebookPostWidget::generateSign ()
 {
 	FacebookPost* post = static_cast<FacebookPost*>(currentPost());
-	
+
     QString ss = "";
- 
+
    ss += isOwnPost() ? "" : "<b>";
-    
-    ss += "<a href='"+ currentAccount()->microblog()->profileUrl( currentAccount(), post->author.userId ) 
+
+    ss += "<a href='"+ currentAccount()->microblog()->profileUrl( currentAccount(), post->author.userId )
 		 +      +"' title=\"" +
     post->author.realName + "\">" ;
-		
+
 		 if (post->author.realName.isEmpty())
 			ss += "Anonymous";
 		else
@@ -81,26 +81,26 @@ QString FacebookPostWidget::generateSign ()
 		ss +=  "via";
 
     //QStringList list = currentPost()->postId.split("_");
-    
+
     /*ss += "<a href=\"http://www.facebook.com/" + list[0] + "/posts/" + list[1]
-	 
+
 	 + "\" title=\""
 	 + currentPost().creationDateTime.toString(Qt::DefaultLocaleLongDate) + "\">%1</a>";*/
-    
+
     if( !post->appId.isEmpty())
         ss += " <b> <a href=\"http://www.facebook.com/apps/application.php?id=" + post->appId.toString() + "\">" + removeTags(post->appName) + "</a></b> ";
     else
-	    ss += " <b>web</b> ";	
+	    ss += " <b>web</b> ";
     QString link = (isNotification() ? post->link : currentAccount()->microblog()->postUrl(currentAccount(), post->author.userName, post->postId));
     ss += ", <a href='"
 	 + link
  	 + "' title='"
-	 + post->creationDateTime.toString(Qt::DefaultLocaleLongDate) + "'>%1</a>";	
+	 + post->creationDateTime.toString(Qt::DefaultLocaleLongDate) + "'>%1</a>";
     return ss;
 
 }
 
-QString FacebookPostWidget::prepareStatus( const QString &txt ) 
+QString FacebookPostWidget::prepareStatus( const QString &txt )
 {
 	FacebookPost* post = static_cast<FacebookPost*>(currentPost());
 
@@ -110,40 +110,40 @@ QString FacebookPostWidget::prepareStatus( const QString &txt )
     kDebug()<<"description: " << post->description;
     kDebug()<<"story: " << post->story;
     kDebug()<<"link: " << post->link;
-	
-	QString content = Choqok::UI::PostWidget::prepareStatus(post->content); 
+
+	QString content = Choqok::UI::PostWidget::prepareStatus(post->content);
 	QString title = /*Choqok::UI::PostWidget::prepareStatus*/(post->title);
 	QString caption = /*Choqok::UI::PostWidget::prepareStatus*/(post->caption);
 	QString description = Choqok::UI::PostWidget::prepareStatus(post->description);
 	QString story = Choqok::UI::PostWidget::prepareStatus(post->story);
 	QString link = /*Choqok::UI::PostWidget::prepareStatus*/(post->link);
     QString status;
-    
+
     //status += post->likeCount + " , " + post->commentCount + " <br/> ";
-    
+
     if( !wallStory.isEmpty() )
         status += "<b>" + wallStory + "</b> <br/> ";
-        
+
     if( !story.isEmpty() )
         status += "<b>" + story + "</b> <br/> ";
     if( !link.isEmpty() )
         status += prepareLink(link, title, caption, description, post->type) + "<br/>";
     if( !content.isEmpty() )
         status += content;
-    
+
     if(!post->propertyString.isEmpty())
     {
-		status += "<br/>" + post->propertyString + "<br/>";    
+		status += "<br/>" + post->propertyString + "<br/>";
 	}
 
-    
+
 	if (!post->iconUrl.isEmpty())
 	{
 	  QString iconUrlString = post->iconUrl;
 	  QString urlString = "";
 	  QUrl iconUrl(iconUrlString);
 	  //status += QString("<br/>Host - %1, Path - %2<br/>").arg(iconUrl.host()).arg(iconUrl.path());
-	  
+
 	  /// Application Images and Images Outside Fb have to be dealt with seperately because Choqok::MediaManager cant download images from encoded URLS (huh)
 	  if (iconUrl.host().contains("www.facebook.com") && iconUrl.path().contains("app_full_proxy.php"))
 	  {
@@ -153,14 +153,14 @@ QString FacebookPostWidget::prepareStatus( const QString &txt )
 	  {
 		  iconUrlString = QUrl::fromPercentEncoding(iconUrl.queryItemValue("url").toAscii());
 	  }
-	  
+
       downloadImage(iconUrlString);
       QString imgUrl = getImageUrl(iconUrlString);
       //status += iconUrlString + "<br/> " + imgUrl + "<br/> ";
       status += QString("<br/><a href = \"%1\" > <img align='left'  src = \"%2\"/> </a><br/>").arg(imgUrl).arg(imgUrl);
     }
-    
-	  
+
+
    //QString status = Choqok::UI::PostWidget::prepareStatus(txt);
    kDebug()<< status;
    return status;
@@ -176,7 +176,7 @@ QString FacebookPostWidget::prepareLink(QString& link, QString& title, QString& 
         } else {
             //title = type;
         }
-    }    
+    }
     QString link_title = link;
     QUrl url(link);
     url.setScheme("title");
@@ -192,41 +192,41 @@ QString FacebookPostWidget::prepareLink(QString& link, QString& title, QString& 
 void FacebookPostWidget::downloadImage(QString& linkUrl) const
 {
 	connect ( Choqok::MediaManager::self(), SIGNAL(imageFetched(QString, QPixmap)), SLOT(slotImageFetched(QString, QPixmap)) );
-	
+
 	Choqok::MediaManager::self()->fetchImage(linkUrl, Choqok::MediaManager::Async) ;
 }
 
 void FacebookPostWidget::slotImageFetched(const QString& linkUrl, const QPixmap& pixmap)
 {
-	
+
 	QString imgUrl = getImageUrl(linkUrl);
-	
+
 	QPixmap pix = pixmap;
-	
+
 	if ( pixmap.width() > 200 )
 	    pix = pixmap.scaledToWidth(200);
     else if ( pixmap.height() > 200 )
         pix = pixmap.scaledToHeight(200);
-   
+
    Choqok::UI::PostWidget::mainWidget()->document()->addResource(QTextDocument::ImageResource, imgUrl, pix);
-   
+
    updateUi();
-   
+
    //Choqok::NotifyManager::error(linkUrl, i18n("iconUrlString"));
    /*QString content = currentPost()->content;
-   
+
    content += QString("<a href = \"%1\"> <img src = \"%2\"/> </a>").arg(linkUrl).arg(imgUrl);
-   
+
    currentPost()->content = content;
-   
-   Choqok::UI::PostWidget::updateUi();       */ 
+
+   Choqok::UI::PostWidget::updateUi();       */
 }
 
 
 void FacebookPostWidget::checkAnchor(const QUrl &link)
 {
 	QString scheme = link.scheme();
-	
+
 	if (scheme == "img")
 		{
 			QString postId = currentPost()->postId;
@@ -238,7 +238,7 @@ void FacebookPostWidget::checkAnchor(const QUrl &link)
 			FacebookViewDialog* fdialog = new FacebookViewDialog(url, this);
 			fdialog->start();
 		}
-	
+
 	else if(scheme == "user")
 	 {
         KMenu menu;
@@ -248,13 +248,13 @@ void FacebookPostWidget::checkAnchor(const QUrl &link)
 
         menu.addAction(info);
         menu.addAction(openInBrowser);
-        
+
         QAction * ret = menu.exec(QCursor::pos());
         if(ret == 0)
             return;
         if(ret == info) {
 			QStringList list = currentPost()->postId.split("_");
-			
+
 			FacebookAccount* acc = qobject_cast<FacebookAccount *> (currentAccount());
 
             FacebookWhoisWidget *wd = new FacebookWhoisWidget(acc, link.host(),  currentPost(), /*ShowType::UserInfo ,*/ this);
@@ -279,7 +279,7 @@ void FacebookPostWidget::checkAnchor(const QUrl &link)
 void FacebookPostWidget::initUi()
 {
     Choqok::UI::PostWidget::initUi();
-    
+
     if( ! isNotification() )
     {
 		KPushButton *btnLike = addButton( "btnLike",i18nc( "@info:tooltip", "Like" ), "rating" );
@@ -288,9 +288,9 @@ void FacebookPostWidget::initUi()
 		KPushButton *btnViewComments = addButton( "btnViewComments",i18nc( "@info:tooltip", "View Comments on this post" ), "" );
 
 		updateLikeAndCommentCounts();
-		
+
 		updateFavStat();
-		
+
 		connect ( btnLike , SIGNAL(clicked(bool)), SLOT(slotLike()) );
 		connect ( btnViewLikes, SIGNAL( clicked(bool)), SLOT(slotViewLikes()) );
 		connect ( btnComment, SIGNAL(clicked(bool)), SLOT(slotComment()) );
@@ -302,7 +302,7 @@ void FacebookPostWidget::initUi()
 void FacebookPostWidget::updateUi()
 {
 	Choqok::UI::PostWidget::updateUi();
-	
+
 	if ( ! isNotification() )
 	  updateLikeAndCommentCounts();
 }
@@ -318,13 +318,13 @@ void FacebookPostWidget::updateUserLike()
 void FacebookPostWidget::slotUpdateUserLike(KJob* job)
 {
 	GetLikesJob *getJob = dynamic_cast<GetLikesJob *>( job );
-	
+
 	if ( getJob-> error() )
 	{
 		showStatusMessage(getJob->errorString(), i18n("Failed to Update User Like Status"));
 	}
-	
-	else 
+
+	else
 	{
 		currentPost()->isFavorited = getJob->userLikes();
 		likeUrl = getJob->href();
@@ -335,13 +335,13 @@ void FacebookPostWidget::slotUpdateUserLike(KJob* job)
 void FacebookPostWidget::updateLikeAndCommentCounts()
 {
 	FacebookPost* post = static_cast<FacebookPost*>(currentPost());
-	
+
 	KPushButton * btnViewLikes = buttons().value("btnViewLikes");
 	KPushButton * btnViewComments = buttons().value("btnViewComments");
-	
+
 	QString likeCount = post->likeCount;
     QString commentCount = post->commentCount;
-    
+
     if (btnViewLikes)
     {
 		btnViewLikes->setText(likeCount + " ");
@@ -349,53 +349,53 @@ void FacebookPostWidget::updateLikeAndCommentCounts()
 		btnViewLikes->setMinimumSize(QSize(likeCount.length() * 10, 20));
 		btnViewLikes->setToolTip(post->likeString);
     }
-    
+
     if ( btnViewComments)
     {
 		btnViewComments->setText(commentCount + " ");
-		btnViewComments->setIconSize(QSize(0,0));    
+		btnViewComments->setIconSize(QSize(0,0));
 		btnViewComments->setMinimumSize(QSize(commentCount.length() * 10, 20));
 		btnViewComments->setToolTip(post->commentString);
 	}
 }
 void FacebookPostWidget::slotLike()
 {
-	
+
 	setReadWithSignal();
 	QString postId = currentPost()->postId;
 	QString path = QString("/%1/likes").arg(postId);
 	FacebookAccount * acc = qobject_cast<FacebookAccount *> (currentAccount());
-	
+
 	FacebookJob * job;
-	
+
 	if ( ! currentPost() -> isFavorited )
 		 job = new FacebookAddJob(path, acc->accessToken());
 	else
 	   	 job = new FacebookDeleteJob(path, acc->accessToken());
-	
+
 	connect( job, SIGNAL(result(KJob*)), this, SLOT(slotLiked(KJob*)) );
-    
+
     job->start();
-    
+
 	//KMessageBox::sorry(choqokMainWindow, i18n("Not Supported"));
 }
 
 void FacebookPostWidget::slotLiked( KJob* job)
 {
 	FacebookJob * fJob ;
-	
+
 	if ( ! currentPost()->isFavorited )
 		fJob = dynamic_cast<FacebookAddJob *>( job );
 	else
-		fJob = dynamic_cast<FacebookDeleteJob *>( job ); 	
-	
+		fJob = dynamic_cast<FacebookDeleteJob *>( job );
+
 	if ( !fJob-> error() || fJob->error() == KJob::UserDefinedError   )
 	{
 		setFavorite();
 		reloadLikesAndComments();
 	}
-	
-	else 
+
+	else
 	{
 		showStatusMessage(fJob->errorString(), i18n("Failed to Like Post"));
 	}
@@ -411,7 +411,7 @@ void FacebookPostWidget::setFavorite()
 void FacebookPostWidget::updateFavStat()
 {
 	KPushButton* btnLike = buttons().value("btnLike");
-	
+
 	if (btnLike)
 	{
 		if(currentPost()->isFavorited){
@@ -432,26 +432,26 @@ void FacebookPostWidget::updateLikeCount()
 	GetLikesJob* getJob = new GetLikesJob(currentPost()->postId, acc->accessToken());
 	connect( getJob, SIGNAL(result(KJob*)), this, SLOT(slotUpdateLikeCount(KJob*)) );
     getJob->start();
-	
+
 }
 
 void FacebookPostWidget::slotUpdateLikeCount(KJob * job)
 {
 	GetLikesJob *getJob = dynamic_cast<GetLikesJob *>( job );
-	
+
 	if ( getJob-> error() )
 	{
 		showStatusMessage(getJob->errorString(), i18n("Failed to Update Like Count"));
 	}
-	
-	else 
+
+	else
 	{
 		FacebookPost* post = static_cast<FacebookPost*>(currentPost());
-		
+
 		post->likeCount = QString::number(getJob->likeCount());
 		updateLikeAndCommentCounts();
 	}
-	
+
 }
 
 void FacebookPostWidget::slotViewLikes()
@@ -476,17 +476,17 @@ void FacebookPostWidget::commented(FacebookAccount* theAccount, QString message)
 {
 	QString postId = currentPost()->postId;
 	QString path = QString("/%1/comments").arg(postId);
-	
+
 	FacebookAccount * acc = theAccount;
-	
+
 	FacebookJob * job = new FacebookAddJob(path, acc->accessToken());;
-	
+
 	job->addQueryItem("message", message);
-	
+
     connect( job, SIGNAL(result(KJob*)), this, SLOT(slotCommented(KJob*)) );
-    
+
     job->start();
-    
+
 }
 
 void FacebookPostWidget::slotCommented(KJob* job)
@@ -496,10 +496,10 @@ void FacebookPostWidget::slotCommented(KJob* job)
 	if ( !fJob-> error() || fJob->error() == KJob::UserDefinedError   )
 	{
 		reloadLikesAndComments();
-		
+
 	}
-	
-	else 
+
+	else
 	{
 		showStatusMessage(fJob->errorString(), i18n("Failed to Comment on Post"));
 	}
@@ -516,20 +516,20 @@ void FacebookPostWidget::updateCommentCount()
 void FacebookPostWidget::slotUpdateCommentCount(KJob * job)
 {
 	GetCommentsJob *getJob = dynamic_cast<GetCommentsJob *>( job );
-	
+
 	if ( getJob-> error() )
 	{
 		showStatusMessage(getJob->errorString(), i18n("Failed to Update Comment Count"));
 	}
-	
-	else 
+
+	else
 	{
 		FacebookPost* post = static_cast<FacebookPost*>(currentPost());
-		
+
 		post->commentCount = QString::number(getJob->commentCount());
 		updateLikeAndCommentCounts();
 	}
-	
+
 }
 
 void FacebookPostWidget::updateLikeString()
@@ -544,24 +544,24 @@ void FacebookPostWidget::updateLikeString()
 void FacebookPostWidget::slotUpdateLikeString(KJob * job)
 {
 	PostJob *postJob = dynamic_cast<PostJob *>( job );
-	
+
 	if ( postJob-> error() )
 	{
 		showStatusMessage(postJob->errorString(), i18n("Failed to Update Like String"));
 	}
-	
-	else 
+
+	else
 	{
 		FacebookPost* post = static_cast<FacebookPost*>(currentPost());
 		FacebookAccount* acc = qobject_cast<FacebookAccount*>(currentAccount());
-		
+
 		LikeInfo likes = postJob->postInfo()[0].likes();
 		QString likeString = createLikeString(acc, likes);
 		likeString += " Click to see who all like this";
 		post->likeString =  likeString;
 		updateLikeAndCommentCounts();
 	}
-	
+
 }
 
 void FacebookPostWidget::updateCommentString()
@@ -576,24 +576,24 @@ void FacebookPostWidget::updateCommentString()
 void FacebookPostWidget::slotUpdateCommentString(KJob * job)
 {
 	PostJob *postJob = dynamic_cast<PostJob *>( job );
-	
+
 	if ( postJob-> error() )
 	{
 		showStatusMessage(postJob->errorString(), i18n("Failed to Update Comment String"));
 	}
-	
-	else 
+
+	else
 	{
 		FacebookPost* post = static_cast<FacebookPost*>(currentPost());
 		FacebookAccount* acc = qobject_cast<FacebookAccount*>(currentAccount());
-		
+
 		CommentInfo comments = postJob->postInfo()[0].comments();
 		QString commentString =  createCommentString(acc, comments);
-		commentString += " Click to see who all comments"; 
+		commentString += " Click to see who all comments";
 		post->commentString =  commentString   ;
 		updateLikeAndCommentCounts();
 	}
-	
+
 }
 void FacebookPostWidget::slotViewComments ()
 {
@@ -616,12 +616,12 @@ void FacebookPostWidget::reloadLikesAndComments()
 	updateCommentString();
 }
 
-bool FacebookPostWidget::isRemoveAvailable() 
+bool FacebookPostWidget::isRemoveAvailable()
 {
 	return false;
 }
 
-bool FacebookPostWidget::isResendAvailable() 
+bool FacebookPostWidget::isResendAvailable()
 {
 	return false;
 }
@@ -643,7 +643,7 @@ void FacebookPostWidget::markNotificationAsRead()
 	if (isNotification() )
 	{
 		FacebookAccount* acc = qobject_cast<FacebookAccount*>(currentAccount());
-		
+
 		NotificationsMarkReadJob* job = new NotificationsMarkReadJob(currentPost()->postId, acc->accessToken());
 		connect(job, SIGNAL(result(KJob*)), this, SLOT(slotMarkNotificationAsRead(KJob*)) );
 		job->start();
@@ -657,8 +657,8 @@ void FacebookPostWidget::slotMarkNotificationAsRead(KJob* job)
 		Choqok::UI::PostWidget::setRead(true);
 		Choqok::NotifyManager::success(i18n("Notification  Marked As Read"));
 	}
-	
-	else 
+
+	else
 	{
 		showStatusMessage(job->errorString(), i18n("Failed to Mark Notification As Read"));
 	}
@@ -667,9 +667,9 @@ void FacebookPostWidget::slotMarkNotificationAsRead(KJob* job)
 void FacebookPostWidget::showStatusMessage(const QString message, const QString caption)
 {
 	QString status = caption + " : " + message;
-	
+
 	if(Choqok::UI::Global::mainWindow()->isActiveWindow()){
         choqokMainWindow->showStatusMessage(message);
     }
-	
+
 }

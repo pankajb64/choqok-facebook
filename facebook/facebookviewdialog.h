@@ -32,23 +32,21 @@
 class FacebookViewDialog : public KDialog
 {
 	Q_OBJECT
-	
-	
+
 	public:
-	
+
 	  FacebookViewDialog (const QUrl& link, QWidget* parent=0, const QString& urlString=QString());
 	  void setLink(const QUrl& link);
 	  void start();
 	  void setCloseUrl(const QString& url);
-	  QString closeUrl() const; 
-	  
-	
+	  QString closeUrl() const;
+
 	protected:
 	  void initUi();
-	
+
 	protected slots:
 	  void urlChanged(const QUrl& url);
-	   
+
 	private:
 	  QUrl mLink;
 	  QUrl mCloseUrl;

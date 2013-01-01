@@ -55,11 +55,11 @@
 class FacebookWhoisWidget : public QFrame
 {
 	Q_OBJECT
-	
+
 	public:
     FacebookWhoisWidget( FacebookAccount* theAccount, const QString &userId,
                            const Choqok::Post* post,  QWidget *parent=0 );
-    
+
     void show(QPoint pos);
 
 protected Q_SLOTS:
@@ -72,14 +72,12 @@ protected Q_SLOTS:
 
 protected:
     void updateHtml();
-    
-
 
 private:
     void setupUi();
     void showForm();
     void loadUserInfo( );
-    
+
     KTextBrowser *wid;
     FacebookAccount *currentAccount;
     QFrame *waitFrame;
