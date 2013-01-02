@@ -46,13 +46,11 @@ public:
     virtual QStringList timelineNames() const;
     virtual void setTimelineNames(const QStringList& list);
     virtual void writeConfig();
-    
-	
+
 private:
     class Private;
     Private * const d;
 //    QString mAccessToken;
 };
 
-#endif 
- 
+#endif

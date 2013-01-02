@@ -24,41 +24,45 @@
 #include "facebookeditaccountwidget.h"
 #include "facebookmicroblog.h"
 #include "facebookaccount.h"
-#include <KDebug>
-#include <kio/jobclasses.h>
-#include <kio/netaccess.h>
-#include <kio/job.h>
-#include <KMessageBox>
-#include <QDomDocument>
-#include <KToolInvocation>
-#include <QProgressBar>
+
 #include <accountmanager.h>
 #include <choqoktools.h>
+#include <notifymanager.h>
+
+#include <libkfbapi/authenticationdialog.h>
+#include <libkfbapi/userinfojob.h>
+
+#include <KDebug>
+#include <KInputDialog>
+#include <KToolInvocation>
+#include <kio/accessmanager.h>
+#include <kio/jobclasses.h>
+#include <kio/job.h>
+#include <kio/netaccess.h>
+#include <KMessageBox>
+
+#include <QCheckBox>
+#include <QDomDocument>
+#include <QProgressBar>
 #include <QtOAuth/interface.h>
 #include <QtOAuth/qoauth_namespace.h>
-#include <kio/accessmanager.h>
-#include <QCheckBox>
-#include <KInputDialog>
-#include <kfacebook/authenticationdialog.h>
-#include <kfacebook/userinfojob.h>
-#include <notifymanager.h>
 
 FacebookEditAccountWidget::FacebookEditAccountWidget(FacebookMicroBlog *microblog, FacebookAccount* account, QWidget* parent) : ChoqokEditAccountWidget(account, parent), mBlog(microblog), mAccount(account)
 {
     setupUi(this);
-    
+
     connect(kcfg_authorize, SIGNAL(clicked(bool)), this, SLOT(showAuthenticationDialog()));
-    
+
    if(mAccount) {
         kcfg_alias->setText( mAccount->alias() );
         if(mAccount->accessToken().isEmpty() ) {
-          kDebug() << "Account exists, but there aint an accessToken. :S ?! " << account ;  
+          kDebug() << "Account exists, but there aint an accessToken. :S ?! " << account ;
 	  setAuthenticated(false);
         } else {
-	  kDebug() << "Account exists with  an accessToken. :) :D " << account;  
+	  kDebug() << "Account exists with  an accessToken. :) :D " << account;
             setAuthenticated(true);
             updateUserName();
-            token = mAccount->accessToken();   
+            token = mAccount->accessToken();
             username = mAccount->username();
             name = mAccount->name();
             id= mAccount->id();
@@ -99,7 +103,7 @@ void FacebookEditAccountWidget::showAuthenticationDialog()
 	      << "read_stream";*/
   permissions << "read_stream"
 		  << "publish_stream"
-		  << "manage_notifications"	
+		  << "manage_notifications"
 	      << "user_birthday"
 	      <<"user_religion_politics"
 	      << "user_relationships"
@@ -181,19 +185,19 @@ void FacebookEditAccountWidget::userInfoJobDone( KJob* job )
   UserInfoJob *  userInfoJob = dynamic_cast<UserInfoJob*>( job );
   Q_ASSERT( userInfoJob );
   if ( !userInfoJob->error() ) {
-    mAccount->setUsername( userInfoJob->userInfo()->username() );
-    mAccount->setId(userInfoJob->userInfo()->id() );
-    mAccount->setName (userInfoJob->userInfo()->name() );
+    mAccount->setUsername( userInfoJob->userInfo().username() );
+    mAccount->setId(userInfoJob->userInfo().id() );
+    mAccount->setName (userInfoJob->userInfo().name() );
     username = mAccount->username();
     name = mAccount->name();
     id = mAccount->id();
     setAuthenticated(true);
     mAccount->writeConfig();
   } else {
-    
+
     kWarning() << "Can't get user info: " << userInfoJob->errorText();
   }
-  
+
 }
 
 bool FacebookEditAccountWidget::validateData()
@@ -269,12 +273,12 @@ void FacebookEditAccountWidget::saveTimelinesTableState()
 
 
 
-QString FacebookEditAccountWidget::apiKey() 
+QString FacebookEditAccountWidget::apiKey()
 {
   return "698f95e6ad2c477359f75f344d12b899";
 }
 
-QString FacebookEditAccountWidget::appID() 
+QString FacebookEditAccountWidget::appID()
 {
   return "161169767282198";
 }

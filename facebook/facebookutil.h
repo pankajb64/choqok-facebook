@@ -24,24 +24,27 @@
 #ifndef FACEBOOKUTIL_H
 #define FACEBOOKUTIL_H
 
-#include <QString>
 #include "facebookaccount.h"
-#include <kfacebook/likeinfo.h>
-#include <kfacebook/commentinfo.h>
-#include <kfacebook/propertyinfo.h>
+
+#include <libkfbapi/likeinfo.h>
+#include <libkfbapi/commentinfo.h>
+#include <libkfbapi/propertyinfo.h>
+
+#include <QString>
+
 #include <algorithm>
 
-using namespace KFacebook;
+using namespace KFbAPI;
 
 QString assignOrNull(QString s);
 
 QString getImageUrl(const QString& linkUrl);
 
-QString createLikeString(const FacebookAccount* account, const LikeInfoPtr likes) ;
+QString createLikeString(const FacebookAccount* account, const LikeInfo &likes) ;
 
-QString createCommentString(const FacebookAccount* account, const CommentInfoPtr comments) ;
+QString createCommentString(const FacebookAccount* account, const CommentInfo &comments) ;
 
-QString createPropertyString(const QList<PropertyInfoPtr> properties);
+QString createPropertyString(const QList<PropertyInfo> properties);
 
 QString trimName(const QString name);
 
@@ -53,4 +56,5 @@ QList<T> reverseList( QList<T>&  in ) {
     std::reverse_copy( in.begin(), in.end(), std::back_inserter( result ) );
     return result;
 }
+
 #endif
