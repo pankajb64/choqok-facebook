@@ -24,11 +24,13 @@
 #ifndef FACEBOOKCOMMENTDIALOG_H
 #define FACEBOOKCOMMENTDIALOG_H
 
+#include "facebookaccount.h"
+
 #include <KDialog>
-#include <QLabel>
 #include <KLineEdit>
 #include <KPushButton>
-#include "facebookaccount.h"
+
+#include <QLabel>
 
 class FacebookInputDialog : public KDialog
 {

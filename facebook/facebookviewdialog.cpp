@@ -22,15 +22,17 @@
 */
 
 #include "facebookviewdialog.h"
+
+#include <notifymanager.h>
+
+#include <KDebug>
 #include <KLocale>
 #include <KMessageBox>
-#include <KDebug>
+
 #include <QVBoxLayout>
 #include <QLabel>
-#include <QWebFrame>
 #include <QWebElement>
-#include <KDebug>
-#include <notifymanager.h>
+#include <QWebFrame>
 
 FacebookViewDialog::FacebookViewDialog ( const QUrl& link, QWidget* parent, const QString& urlString) : KDialog(parent)
 {

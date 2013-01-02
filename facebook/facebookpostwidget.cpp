@@ -20,29 +20,32 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, see http://www.gnu.org/licenses/
 */
-
-#include "facebookpostwidget.h"
-#include <KDebug>
-#include <KLocalizedString>
-#include <KAction>
-#include <KMenu>
-#include <klocalizedstring.h>
-#include <KUrl>
-#include <mediamanager.h>
-#include <textbrowser.h>
 #include "facebookutil.h"
 #include "facebookviewdialog.h"
 #include "facebookwhoiswidget.h"
-#include <KPushButton>
-#include <QtGui/QtGui>
-#include <QtGui/QLayout>
-#include <KMessageBox>
+#include "facebookpostwidget.h"
+#include "facebookinputdialog.h"
+
+#include "choqokuiglobal.h"
+#include <mediamanager.h>
+#include <textbrowser.h>
+
 #include <libkfbapi/getlikesjob.h>
 #include <libkfbapi/getcommentsjob.h>
-#include "facebookinputdialog.h"
 #include <libkfbapi/postjob.h>
 #include <libkfbapi/notificationsmarkreadjob.h>
-#include "choqokuiglobal.h"
+
+#include <KAction>
+#include <KDebug>
+#include <KLocalizedString>
+#include <KMenu>
+#include <KMessageBox>
+#include <klocalizedstring.h>
+#include <KPushButton>
+#include <KUrl>
+
+#include <QtGui/QtGui>
+#include <QtGui/QLayout>
 
 using namespace KFbAPI;
 

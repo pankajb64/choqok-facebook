@@ -25,9 +25,10 @@
 #define FACEBOOKVIEWDIALOG_H
 
 #include <KDialog>
-#include <QUrl>
-#include <QProgressBar>
 #include <KWebView>
+
+#include <QProgressBar>
+#include <QUrl>
 
 class FacebookViewDialog : public KDialog
 {

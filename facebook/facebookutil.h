@@ -24,11 +24,14 @@
 #ifndef FACEBOOKUTIL_H
 #define FACEBOOKUTIL_H
 
-#include <QString>
 #include "facebookaccount.h"
+
 #include <libkfbapi/likeinfo.h>
 #include <libkfbapi/commentinfo.h>
 #include <libkfbapi/propertyinfo.h>
+
+#include <QString>
+
 #include <algorithm>
 
 using namespace KFbAPI;

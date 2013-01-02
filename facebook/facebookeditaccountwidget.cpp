@@ -24,24 +24,28 @@
 #include "facebookeditaccountwidget.h"
 #include "facebookmicroblog.h"
 #include "facebookaccount.h"
-#include <KDebug>
-#include <kio/jobclasses.h>
-#include <kio/netaccess.h>
-#include <kio/job.h>
-#include <KMessageBox>
-#include <QDomDocument>
-#include <KToolInvocation>
-#include <QProgressBar>
+
 #include <accountmanager.h>
 #include <choqoktools.h>
-#include <QtOAuth/interface.h>
-#include <QtOAuth/qoauth_namespace.h>
-#include <kio/accessmanager.h>
-#include <QCheckBox>
-#include <KInputDialog>
+#include <notifymanager.h>
+
 #include <libkfbapi/authenticationdialog.h>
 #include <libkfbapi/userinfojob.h>
-#include <notifymanager.h>
+
+#include <KDebug>
+#include <KInputDialog>
+#include <KToolInvocation>
+#include <kio/accessmanager.h>
+#include <kio/jobclasses.h>
+#include <kio/job.h>
+#include <kio/netaccess.h>
+#include <KMessageBox>
+
+#include <QCheckBox>
+#include <QDomDocument>
+#include <QProgressBar>
+#include <QtOAuth/interface.h>
+#include <QtOAuth/qoauth_namespace.h>
 
 FacebookEditAccountWidget::FacebookEditAccountWidget(FacebookMicroBlog *microblog, FacebookAccount* account, QWidget* parent) : ChoqokEditAccountWidget(account, parent), mBlog(microblog), mAccount(account)
 {

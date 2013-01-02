@@ -21,17 +21,19 @@
     along with this program; if not, see http://www.gnu.org/licenses/
 */
 
-#include "facebookcomposerwidget.h"
-#include <KDebug>
-#include <shortenmanager.h>
 #include "facebookaccount.h"
+#include "facebookcomposerwidget.h"
 #include "facebookmicroblog.h"
-#include <klocalizedstring.h>
-#include <notifymanager.h>
+
 #include "composerwidget.h"
 #include "choqoktextedit.h"
+#include <shortenmanager.h>
+#include <notifymanager.h>
+
+#include <KDebug>
 #include <KFileDialog>
 #include <KFileItem>
+#include <klocalizedstring.h>
 
 FacebookComposerWidget::FacebookComposerWidget(Choqok::Account* account, QWidget* parent)
     : Choqok::UI::ComposerWidget(account, parent), btnAttach(0), mediumName(0), btnCancel(0)

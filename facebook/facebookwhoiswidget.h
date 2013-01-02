@@ -24,33 +24,37 @@
 #ifndef FACEBOOKWHOISWIDGET_H
 #define FACEBOOKWHOISWIDGET_H
 
-#include <QtCore/QUrl>
-#include <QtGui/QFrame>
-#include <choqoktypes.h>
-#include "mediamanager.h"
-#include <KTextBrowser>
-#include <KUrl>
-#include <kicon.h>
-#include <KNotification>
-#include <KProcess>
-#include <KToolInvocation>
-#include <KApplication>
-#include <QtGui/QDesktopWidget>
-#include <QtGui/QVBoxLayout>
 #include "facebookaccount.h"
-#include <KIO/Job>
-#include <KDebug>
-#include <QtXml/QDomDocument>
-#include <klocalizedstring.h>
-#include <microblog.h>
 #include "facebookmicroblog.h"
+#include "facebookutil.h"
+
+#include <choqoktypes.h>
 #include <choqokappearancesettings.h>
-#include <notifymanager.h>
 #include <choqoktools.h>
-#include <QtCore/QPointer>
+#include "mediamanager.h"
+#include <microblog.h>
+#include <notifymanager.h>
+
 #include <libkfbapi/userinfojob.h>
 #include <libkfbapi/userinfo.h>
-#include "facebookutil.h"
+
+#include <KApplication>
+#include <KDebug>
+#include <kicon.h>
+#include <KIO/Job>
+#include <KNotification>
+#include <KProcess>
+#include <KTextBrowser>
+#include <KToolInvocation>
+#include <KUrl>
+#include <klocalizedstring.h>
+
+#include <QtCore/QPointer>
+#include <QtCore/QUrl>
+#include <QtGui/QFrame>
+#include <QtGui/QDesktopWidget>
+#include <QtGui/QVBoxLayout>
+#include <QtXml/QDomDocument>
 
 class FacebookWhoisWidget : public QFrame
 {

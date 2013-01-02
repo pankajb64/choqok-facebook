@@ -23,9 +23,12 @@
 
 #ifndef FACEBOOKPOSTWIDGET_H
 #define FACEBOOKPOSTWIDGET_H
-#include <postwidget.h>
+
 #include "facebookaccount.h"
 #include "facebookpost.h"
+
+#include <postwidget.h>
+
 #include <KJob>
 
 using namespace KFbAPI;

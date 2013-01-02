@@ -21,36 +21,40 @@
     along with this program; if not, see http://www.gnu.org/licenses/
 */
 
-#include "facebookmicroblog.h"
-#include <KAboutData>
-#include <KGenericFactory>
 #include "facebookaccount.h"
-#include <KMessageBox>
+#include "facebookcomposerwidget.h"
+#include "facebookeditaccountwidget.h"
+#include "facebookmicroblog.h"
+#include "facebookpostwidget.h"
+#include "facebookutil.h"
+#include "facebookviewdialog.h"
+
+#include "accountmanager.h"
+#include <application.h>
+#include "editaccountwidget.h"
+#include "mediamanager.h"
+#include <notifymanager.h>
+#include "postwidget.h"
+
 #include <libkfbapi/postinfo.h>
 #include <libkfbapi/postjob.h>
 #include <libkfbapi/postaddjob.h>
 #include <libkfbapi/postslistjob.h>
-#include "accountmanager.h"
-#include "editaccountwidget.h"
-#include "facebookeditaccountwidget.h"
-#include "postwidget.h"
-#include "facebookpostwidget.h"
-#include <application.h>
-#include "facebookutil.h"
-#include <notifymanager.h>
-#include "facebookcomposerwidget.h"
-#include <kio/netaccess.h>
-#include <kmimetype.h>
-#include "mediamanager.h"
-#include <kio/jobclasses.h>
-#include <kio/job.h>
-#include <QtOAuth/qoauth_namespace.h>
-#include <QtOAuth/QtOAuth>
-#include <KAction>
-#include <QMenu>
-#include "facebookviewdialog.h"
 #include <libkfbapi/notificationslistjob.h>
 #include <libkfbapi/userinfojob.h>
+
+#include <KAboutData>
+#include <KAction>
+#include <KGenericFactory>
+#include <KMessageBox>
+#include <kio/netaccess.h>
+#include <kio/jobclasses.h>
+#include <kio/job.h>
+#include <kmimetype.h>
+
+#include <QtOAuth/qoauth_namespace.h>
+#include <QtOAuth/QtOAuth>
+#include <QMenu>
 
 K_PLUGIN_FACTORY( MyPluginFactory, registerPlugin < FacebookMicroBlog > (); )
 K_EXPORT_PLUGIN( MyPluginFactory( "choqok_facebook" ) )

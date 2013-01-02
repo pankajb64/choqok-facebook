@@ -24,8 +24,8 @@
 #ifndef FACEBOOKPOST_H
 #define FACEBOOKPOST_H
 
-#include <libkfbapi/postinfo.h>
 #include <choqoktypes.h>
+#include <libkfbapi/postinfo.h>
 
 using namespace KFbAPI;
 

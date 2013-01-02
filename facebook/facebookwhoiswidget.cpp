@@ -22,6 +22,7 @@
 */
 
 #include "facebookwhoiswidget.h"
+
 #include <KAnimatedButton>
 #include <KStatusBar>
 

@@ -24,13 +24,15 @@
 #ifndef FACEBOOKCOMPOSERWIDGET_H
 #define FACEBOOKCOMPOSERWIDGET_H
 
-#include <composerwidget.h>
 #include <KPushButton>
-#include <QPointer>
-#include <qlayout.h>
+
 #include <QHBoxLayout>
+#include <qlayout.h>
 #include <QLabel>
+#include <QPointer>
+
 #include <account.h>
+#include <composerwidget.h>
 #include <microblog.h>
 
 class FacebookComposerWidget : public Choqok::UI::ComposerWidget
