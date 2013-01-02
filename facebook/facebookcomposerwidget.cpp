@@ -21,17 +21,19 @@
     along with this program; if not, see http://www.gnu.org/licenses/
 */
 
-#include "facebookcomposerwidget.h"
-#include <KDebug>
-#include <shortenmanager.h>
 #include "facebookaccount.h"
+#include "facebookcomposerwidget.h"
 #include "facebookmicroblog.h"
-#include <klocalizedstring.h>
-#include <notifymanager.h>
+
 #include "composerwidget.h"
 #include "choqoktextedit.h"
+#include <shortenmanager.h>
+#include <notifymanager.h>
+
+#include <KDebug>
 #include <KFileDialog>
 #include <KFileItem>
+#include <klocalizedstring.h>
 
 FacebookComposerWidget::FacebookComposerWidget(Choqok::Account* account, QWidget* parent)
     : Choqok::UI::ComposerWidget(account, parent), btnAttach(0), mediumName(0), btnCancel(0)
@@ -41,7 +43,7 @@ FacebookComposerWidget::FacebookComposerWidget(Choqok::Account* account, QWidget
     btnAttach->setIcon(KIcon("image-x-generic"));
     btnAttach->setToolTip(i18n("Attach a photo/Video"));
     btnAttach->setMaximumWidth(btnAttach->height());
-    
+
     connect(btnAttach, SIGNAL(clicked(bool)), this, SLOT(selectMediumToAttach()));
     QVBoxLayout *vLayout = new QVBoxLayout;
     vLayout->addWidget(btnAttach);
@@ -112,7 +114,7 @@ void FacebookComposerWidget::selectMediumToAttach()
                                                       i18n("Select Media to Upload") );
     if( mediumToAttach.isEmpty() )
         return;
-    
+
     QString fileName = KUrl(mediumToAttach).fileName();
     if( !mediumName ){
         kDebug()<<fileName;

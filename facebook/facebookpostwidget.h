@@ -23,30 +23,31 @@
 
 #ifndef FACEBOOKPOSTWIDGET_H
 #define FACEBOOKPOSTWIDGET_H
-#include <postwidget.h>
+
 #include "facebookaccount.h"
 #include "facebookpost.h"
+
+#include <postwidget.h>
+
 #include <KJob>
 
-using namespace KFacebook;
+using namespace KFbAPI;
 
 /*namespace Choqok
 {
   namespace UI
   {
 	class PostWidget;
-  } 	
+  }
 }*/
 
 class FacebookPostWidget : public Choqok::UI::PostWidget {
 
     Q_OBJECT
-    
+
     public:
     FacebookPostWidget(Choqok::Account* account, Choqok::Post* post, QWidget* parent = 0);
-    
-    
-    
+
     protected slots:
     void slotImageFetched(const QString& remoteUrl, const QPixmap& pixmap);
     void checkAnchor(const QUrl& link);
@@ -64,11 +65,11 @@ class FacebookPostWidget : public Choqok::UI::PostWidget {
     virtual void markNotificationAsRead();
     virtual void slotMarkNotificationAsRead(KJob* job);
     void commented(FacebookAccount* theAccount, QString message);
-    
-    protected:	
+
+    protected:
     virtual QString generateSign ();
     virtual QString prepareStatus( const QString &txt );
-    void downloadImage(QString& linkUrl) const;  
+    void downloadImage(QString& linkUrl) const;
     void initUi();
     virtual bool isResendAvailable() ;
     virtual bool isRemoveAvailable() ;
@@ -87,12 +88,12 @@ class FacebookPostWidget : public Choqok::UI::PostWidget {
     virtual void showStatusMessage(const QString message, const QString caption);
 
     static const KIcon unFavIcon;
-    
+
     private:
-    
+
     QString prepareLink (QString& link, QString& title, QString& caption, QString& description, QString& type ) const;
     QString likeUrl;
     QString wallStory;
-
 };
+
 #endif

@@ -1,10 +1,6 @@
 project(choqok-facebook)
 cmake_minimum_required(VERSION 2.6)
 find_package(KDE4 REQUIRED 4.4)
-find_package(Choqok REQUIRED)
-find_package(QJson REQUIRED)
-find_package(QCA2 REQUIRED)
-find_package(QtOAuth REQUIRED)
 
 set(CHOQOK_FACEBOOK_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(CHOQOK_FACEBOOK_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
@@ -12,7 +8,12 @@ set(CHOQOK_FACEBOOK_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 set(CMAKE_MODULE_PATH ${CHOQOK_FACEBOOK_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
 find_package(KdepimLibs REQUIRED)
-find_package(KFacebook REQUIRED)
+find_package(KFBAPI REQUIRED)
+
+find_package(Choqok REQUIRED)
+find_package(QJson REQUIRED)
+find_package(QCA2 REQUIRED)
+find_package(QtOAuth REQUIRED)
 
 include (KDE4Defaults)
 add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})

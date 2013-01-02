@@ -24,16 +24,15 @@
 #ifndef FACEBOOKPOST_H
 #define FACEBOOKPOST_H
 
-#include <kfacebook/postinfo.h>
 #include <choqoktypes.h>
+#include <libkfbapi/postinfo.h>
 
-using namespace KFacebook;
+using namespace KFbAPI;
 
 class FacebookPost : public Choqok::Post
 {
-	
 	public :
-	
+
 	FacebookPost() {}
 	~FacebookPost() {}
 	//FacebookPost(Choqok::Post post) : Choqok::Post::Post() {}
@@ -50,7 +49,7 @@ class FacebookPost : public Choqok::Post
 	QString appName;
 	ChoqokId appId;
 	QDateTime updateDateTime;
-	
+
 	//PostInfoPtr post;
 };
 

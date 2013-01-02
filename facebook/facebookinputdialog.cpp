@@ -58,12 +58,12 @@ void FacebookInputDialog::initUi()
 void FacebookInputDialog::slotSubmitInput()
 {
 	QString message = lineEdit->text();
-	
-	if( ! message.isEmpty() )
+
+    if( ! message.isEmpty() )
 	{
 		emit inputEntered(mAccount, message);
 	}
-	
+
 	if (mCloseWithSignal)
 	  close();
 }
