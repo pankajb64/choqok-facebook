@@ -21,36 +21,40 @@
     along with this program; if not, see http://www.gnu.org/licenses/
 */
 
-#include "facebookmicroblog.h"
-#include <KAboutData>
-#include <KGenericFactory>
 #include "facebookaccount.h"
-#include <KMessageBox>
-#include <kfacebook/postinfo.h>
-#include <kfacebook/postjob.h>
-#include <kfacebook/postaddjob.h>
-#include <kfacebook/postslistjob.h>
-#include "accountmanager.h"
-#include "editaccountwidget.h"
-#include "facebookeditaccountwidget.h"
-#include "postwidget.h"
-#include "facebookpostwidget.h"
-#include <application.h>
-#include "facebookutil.h"
-#include <notifymanager.h>
 #include "facebookcomposerwidget.h"
-#include <kio/netaccess.h>
-#include <kmimetype.h>
+#include "facebookeditaccountwidget.h"
+#include "facebookmicroblog.h"
+#include "facebookpostwidget.h"
+#include "facebookutil.h"
+#include "facebookviewdialog.h"
+
+#include "accountmanager.h"
+#include <application.h>
+#include "editaccountwidget.h"
 #include "mediamanager.h"
+#include <notifymanager.h>
+#include "postwidget.h"
+
+#include <libkfbapi/postinfo.h>
+#include <libkfbapi/postjob.h>
+#include <libkfbapi/postaddjob.h>
+#include <libkfbapi/postslistjob.h>
+#include <libkfbapi/notificationslistjob.h>
+#include <libkfbapi/userinfojob.h>
+
+#include <KAboutData>
+#include <KAction>
+#include <KGenericFactory>
+#include <KMessageBox>
+#include <kio/netaccess.h>
 #include <kio/jobclasses.h>
 #include <kio/job.h>
+#include <kmimetype.h>
+
 #include <QtOAuth/qoauth_namespace.h>
 #include <QtOAuth/QtOAuth>
-#include <KAction>
 #include <QMenu>
-#include "facebookviewdialog.h"
-#include <kfacebook/notificationslistjob.h>
-#include <kfacebook/userinfojob.h>
 
 K_PLUGIN_FACTORY( MyPluginFactory, registerPlugin < FacebookMicroBlog > (); )
 K_EXPORT_PLUGIN( MyPluginFactory( "choqok_facebook" ) )
@@ -96,14 +100,14 @@ void FacebookMicroBlog::setTimelineInfos()
 void FacebookMicroBlog::setUserTimelines(FacebookAccount* theAccount, const QStringList& lists)
 {
 	QStringList tms = theAccount->timelineNames();
-	
+
     foreach(const QString &name, lists){
         tms.append(name);
         addTimelineName(name);
     }
     tms.removeDuplicates();
     theAccount->setTimelineNames(tms);
-} 
+}
 
 FacebookMicroBlog::~FacebookMicroBlog()
 {
@@ -115,7 +119,7 @@ Choqok::UI::PostWidget* FacebookMicroBlog::createPostWidget(Choqok::Account* acc
     return new FacebookPostWidget(account, post, parent);
 }
 
-void FacebookMicroBlog::createPost(Choqok::Account* theAccount, Choqok::Post* post) 
+void FacebookMicroBlog::createPost(Choqok::Account* theAccount, Choqok::Post* post)
 {
     kDebug()<<"Creating a new Post for " <<theAccount;
     FacebookAccount* acc = qobject_cast<FacebookAccount*>(theAccount);
@@ -124,7 +128,7 @@ void FacebookMicroBlog::createPost(Choqok::Account* theAccount, Choqok::Post* po
     mJobsPost.insert(job, post);
     connect( job, SIGNAL(result(KJob*)), this, SLOT(slotCreatePost(KJob*)) );
     job->start();
- 
+
 }
 
 void FacebookMicroBlog::slotCreatePost(KJob* job)
@@ -132,7 +136,7 @@ void FacebookMicroBlog::slotCreatePost(KJob* job)
     FacebookAccount* acc = mJobsAccount.take(job);
     Choqok::Post* post = mJobsPost.take(job);
     if ( post->isError || job->error() ) {
-                
+
         kError() << "Server Error:" ;
         Choqok::NotifyManager::error( job->errorString(), i18n("Failed to submit new post "));
         emit errorPost ( acc, post, Choqok::MicroBlog::ServerError, i18n ( "Creating the new post failed, with error" ), MicroBlog::Critical );
@@ -140,16 +144,16 @@ void FacebookMicroBlog::slotCreatePost(KJob* job)
        Choqok::NotifyManager::success(i18n("New post submitted successfully"));
        emit postCreated ( acc, post );
    }
-   
+
     //emit postCreated ( acc, post );
 }
 void FacebookMicroBlog::abortCreatePost(Choqok::Account* theAccount, Choqok::Post* post)
 {
-    FacebookAccount* acc = qobject_cast<FacebookAccount*>(theAccount); 
+    FacebookAccount* acc = qobject_cast<FacebookAccount*>(theAccount);
     Q_UNUSED(post);
-    
+
     PostAddJob* job = (PostAddJob *)mJobsAccount.key(acc);
-    
+
     if(job)
       job->abort();
 }
@@ -190,7 +194,7 @@ ChoqokEditAccountWidget* FacebookMicroBlog::createEditAccountWidget(Choqok::Acco
         kDebug()<<"Account passed here was not a valid Facebook Account!";
         return 0L;
     }
-}    
+}
 
 Choqok::UI::ComposerWidget* FacebookMicroBlog::createComposerWidget(Choqok::Account* account, QWidget* parent)
 {
@@ -207,35 +211,35 @@ Choqok::TimelineInfo* FacebookMicroBlog::timelineInfo(const QString& timelineNam
 		 return mTimelineInfos.value(timelineName);
 	}
   }
-  
+
   if(timelineName.contains("/"))
   {
-	
+
 	 if(mTimelineInfos.contains(timelineName))
      {
          return mTimelineInfos.value(timelineName);
      }
-     
+
      Choqok::TimelineInfo *info = new Choqok::TimelineInfo;
      info->name = timelineName;
      info->description = QString("%1 - News Feed").arg(timelineName.split("/")[0]);
      info->icon = "format-list-unordered";
      mTimelineInfos.insert(timelineName, info);
      return info;
-  } 
+  }
 
   return 0;
-  
+
 }
 
 QList< Choqok::Post* > FacebookMicroBlog::loadTimeline(Choqok::Account* account, const QString& timelineName)
 {
-	
+
     kDebug()<<timelineName;
     QList< Choqok::Post* > list;
     if (timelineName == "Notifications")
       return list;
-    
+
     QString fileName = Choqok::AccountManager::generatePostBackupFileName(account->alias(), timelineName);
     kDebug() << "Backup File Name - " << fileName;
     KConfig postsBackup( "choqok/" + fileName, KConfig::NoGlobals, "data" );
@@ -265,17 +269,17 @@ QList< Choqok::Post* > FacebookMicroBlog::loadTimeline(Choqok::Account* account,
             st->author.profileImageUrl = grp.readEntry( "profileImageUrl", QString() );
             st->caption = grp.readEntry( "caption", QString() );
             st->description = grp.readEntry( "description", QString() );
-            st->iconUrl = grp.readEntry( "iconUrl", QString() );            
-            //st->properties = grp.readEntry( "properties", QList<PropertyInfoPtr>() );            
+            st->iconUrl = grp.readEntry( "iconUrl", QString() );
+            //st->properties = grp.readEntry( "properties", QList<PropertyInfoPtr>() );
             st->likeCount = grp.readEntry( "likeCount", QString() );
             st->likeString = grp.readEntry( "likeString", QString() );
             st->story = grp.readEntry( "story", QString() );
             st->commentCount = grp.readEntry( "commentCount", QString() );
             st->commentString = grp.readEntry( "commentString", QString() );
             st->propertyString = grp.readEntry( "propertyString", QString() );
-            st->appName = grp.readEntry( "appName", QString() );                        
-            st->appId = grp.readEntry( "appId", QString() );                                    
-            st->updateDateTime = grp.readEntry( "updateDateTime", QDateTime::currentDateTime() );            
+            st->appName = grp.readEntry( "appName", QString() );
+            st->appId = grp.readEntry( "appId", QString() );
+            st->updateDateTime = grp.readEntry( "updateDateTime", QDateTime::currentDateTime() );
             st->isRead = grp.readEntry("isRead", true);
             st->conversationId = grp.readEntry("conversationId", QString());
             st->isFavorited = grp.readEntry("isFavorited", true);
@@ -283,7 +287,7 @@ QList< Choqok::Post* > FacebookMicroBlog::loadTimeline(Choqok::Account* account,
 
             list.append( st );
         }
-        
+
         mTimelineUpdateTime[account][timelineName] = st->updateDateTime.toString(Qt::ISODate);
     }
     return list;
@@ -324,7 +328,7 @@ void FacebookMicroBlog::saveTimeline(Choqok::Account* account, const QString& ti
 			grp.writeEntry( "profileImageUrl", post->author.profileImageUrl );
 			grp.writeEntry( "isRead" , post->isRead );
 			grp.writeEntry( "conversationId", post->conversationId.toString() );
-			grp.writeEntry( "caption", post->caption ); 
+			grp.writeEntry( "caption", post->caption );
 			grp.writeEntry( "description", post->description );
 			grp.writeEntry( "iconUrl", post->iconUrl );
 			grp.writeEntry( "likeCount", post->likeCount );
@@ -350,11 +354,11 @@ void FacebookMicroBlog::saveTimeline(Choqok::Account* account, const QString& ti
 void FacebookMicroBlog::updateTimelines(Choqok::Account * theAccount)
 {
   kDebug();
-  
+
     foreach ( const QString &tm, theAccount->timelineNames() ) {
 		if (tm == "Notifications")
 		  requestNotification(theAccount);
-		else  
+		else
           requestTimeline( theAccount, tm, mTimelineUpdateTime[theAccount][tm] );
     }
 }
@@ -362,12 +366,12 @@ void FacebookMicroBlog::updateTimelines(Choqok::Account * theAccount)
 void FacebookMicroBlog::requestTimeline(Choqok::Account *theAccount, QString timelineName, QString sinceTime)
 {
 	FacebookAccount* acc = qobject_cast<FacebookAccount*>(theAccount);
-	
+
     if(!acc){
         kError()<<"FacebookMicroBlog::updateTimelines: acc is not an FacebookAccount";
         return;
     }
-    
+
     PostsListJob * job;
     if (timelineName == "Home")
       job = new PostsListJob(acc->accessToken());
@@ -377,23 +381,23 @@ void FacebookMicroBlog::requestTimeline(Choqok::Account *theAccount, QString tim
       {
 		  QString userId = timelineName.split("/")[1];
 		  job = new PostsListJob(userId, acc->accessToken());
-	  }  
-    job->addQueryItem("since", sinceTime);    
+	  }
+    job->addQueryItem("since", sinceTime);
     mJobsAccount.insert(job, acc);
     mJobsTimeline.insert(job, timelineName);
     connect( job, SIGNAL(result(KJob*)), this, SLOT(slotTimeLineLoaded(KJob*)) );
     job->start();
-	
+
 }
 void FacebookMicroBlog::slotTimeLineLoaded(KJob *job)
 {
   kDebug();
-    
+
     FacebookAccount* acc = mJobsAccount.take(job);
     if ( job->error() ) {
         kDebug() << "Job Error: " << job->errorString();
         emit error( acc, CommunicationError, i18n("Timeline update failed, %1", job->errorString()), Low );
-     
+
     }else {
 	QString tm = mJobsTimeline.take(job);
 	   QList<Choqok::Post*>list = toChoqokPost(acc, ((PostsListJob *)job)->posts() );
@@ -405,12 +409,12 @@ void FacebookMicroBlog::slotTimeLineLoaded(KJob *job)
 void FacebookMicroBlog::requestNotification(Choqok::Account* theAccount)
 {
 	FacebookAccount* acc = qobject_cast<FacebookAccount*>(theAccount);
-	
+
     if(!acc){
         kError()<<"FacebookMicroBlog::updateTimelines: acc is not an FacebookAccount";
         return;
     }
-    
+
     NotificationsListJob* job = new NotificationsListJob(acc->accessToken());
     mJobsAccount.insert(job, acc);
     connect( job, SIGNAL(result(KJob*)), this, SLOT(slotNotificationLoaded(KJob*)) );
@@ -420,7 +424,7 @@ void FacebookMicroBlog::requestNotification(Choqok::Account* theAccount)
 void FacebookMicroBlog::slotNotificationLoaded(KJob* job)
 {
 	FacebookAccount* acc = mJobsAccount.take(job);
-	
+
 	if ( job->error() ) {
         kDebug() << "Job Error: " << job->errorString();
         emit error( acc, CommunicationError, i18n("Notification update failed, %1", job->errorString()), Low );
@@ -447,25 +451,25 @@ void FacebookMicroBlog::aboutToUnload()
 QString FacebookMicroBlog::profileUrl (Choqok::Account* acc, const QString& userId) const
 {
 	FacebookAccount* account = qobject_cast<FacebookAccount*>(acc);
-	
+
     if(!account){
         kError()<<"FacebookMicroBlog::profileUrl: acc is not an FacebookAccount";
         return QString();
     }
-    
+
 	return QString("user://%1").arg(userId);
 }
 
 QString FacebookMicroBlog::postUrl(Choqok::Account*, const QString& username, const QString& postId) const
 {
-    QStringList list = postId.split("_");	
+    QStringList list = postId.split("_");
     return QString ( "http://www.facebook.com/%1/posts/%2" ).arg ( list.at(0) ).arg ( list.at(1) );
 }
 
 QString FacebookMicroBlog::facebookUrl(Choqok::Account* acc, const QString& userId) const
 {
 	FacebookAccount* account = qobject_cast<FacebookAccount*>(acc);
-	
+
     if(!account){
         kError()<<"FacebookMicroBlog::facebookUrl: acc is not an FacebookAccount";
         return QString();
@@ -474,90 +478,90 @@ QString FacebookMicroBlog::facebookUrl(Choqok::Account* acc, const QString& user
 }
 
 
-QList<Choqok::Post *> FacebookMicroBlog::toChoqokPost(FacebookAccount* account, PostInfoList mPosts) const
+QList<Choqok::Post *> FacebookMicroBlog::toChoqokPost(FacebookAccount* account, QList<PostInfo> mPosts) const
 {
- 
+
   QList<Choqok::Post*> list ;
-  PostInfoPtr p;
-  
+  PostInfo p;
+
   foreach ( p, mPosts)
   {
-	  PostInfo * postInfo = p.data();
+	  PostInfo * postInfo = &p;
 	  FacebookPost * post = new FacebookPost ();
 	  post->postId = assignOrNull(postInfo->id());
 	  post->author = toChoqokUser( account, postInfo->from());
-	  post->author.profileImageUrl = "https://graph.facebook.com/" + postInfo->from()->id() + "/picture" ; 
+	  post->author.profileImageUrl = "https://graph.facebook.com/" + postInfo->from().id() + "/picture" ;
 	  post->content = assignOrNull(postInfo->message());
-	  post->link = assignOrNull(postInfo->link());
+	  post->link = assignOrNull(postInfo->link().toString());
 	  post->title = assignOrNull(postInfo->name());
 	  post->caption = assignOrNull(postInfo->caption());
 	  post->description = assignOrNull(postInfo->description());
-	  post->iconUrl = assignOrNull(postInfo->pictureUrl()); //assignOrNull(postInfo->icon());
+	  post->iconUrl = assignOrNull(postInfo->pictureUrl().toString()); //assignOrNull(postInfo->icon());
 	  //post->properties = postInfo->properties();
 	  post->type = assignOrNull(postInfo->type());
-	  post->source = assignOrNull(postInfo->source());
-	  post->likeCount = postInfo->likes().isNull() ?  "0" : QString::number(postInfo->likes()->count()); //+ " likes";
-	  QString likeString =  postInfo->likes().isNull() ? "" : createLikeString(account, postInfo->likes());
-	  likeString += " Click to see who all like this";   
+	  post->source = assignOrNull(postInfo->sourceUrl().toString());
+      post->likeCount = QString::number(postInfo->likes().count()); //+ " likes";
+	  QString likeString =  createLikeString(account, postInfo->likes());
+	  likeString += " Click to see who all like this";
 	  post->likeString = likeString;
 	  post->story = assignOrNull(postInfo->story());
-	  post->commentCount = postInfo->comments().isNull() ?  "0" : QString::number(postInfo->comments()->count()); // + " comments";
-	  QString commentString = postInfo->comments().isNull() ? "" : createCommentString(account, postInfo->comments());
+	  post->commentCount = QString::number(postInfo->comments().count()); // + " comments";
+	  QString commentString = createCommentString(account, postInfo->comments());
 	  commentString += 	" Click to see all comments";
 	  post->commentString = commentString;
-	  post->propertyString = postInfo->properties().isEmpty() ? "" : createPropertyString(postInfo->properties());
-	  post->appId = postInfo->application().isNull() ?  "" : postInfo->application()->id();
-	  post->appName = postInfo->application().isNull() ?  "" : postInfo->application()->name();
+	  post->propertyString = createPropertyString(postInfo->properties());
+	  post->appId = postInfo->application().id();
+	  post->appName =  postInfo->application().name();
 	  post->creationDateTime = postInfo->createdTime().dateTime();
 	  post->updateDateTime = postInfo->updatedTime().dateTime();
-	  post->isRead = (postInfo->from()->id() == account->id());
-  
+	  post->isRead = (postInfo->from().id() == account->id());
+
       //post->content = prepareStatus(post);
-      
+
 	  list.append(post);
   }
-  
+
   return list;
 }
 
-Choqok::User FacebookMicroBlog::toChoqokUser(FacebookAccount* account, UserInfoPtr userInfo) const
+Choqok::User FacebookMicroBlog::toChoqokUser(FacebookAccount* account, UserInfo userInfo) const
 {
 	Choqok::User * user = new Choqok::User();
-	
-	user->userId = userInfo->id();
-	user->userName = userInfo->username().isNull() ? userInfo->id() : userInfo->username() ;
-	user->realName = (account->id() == userInfo->id()) ? "You" : userInfo->name();
-	
+
+	user->userId = userInfo.id();
+	user->userName = userInfo.username().isNull() ? userInfo.id() : userInfo.username() ;
+	user->realName = (account->id() == userInfo.id()) ? "You" : userInfo.name();
+
 	return *user;
 }
 
 
-QList<Choqok::Post*> FacebookMicroBlog::toChoqokPost(FacebookAccount* account, NotificationInfoList notifications) const
+QList<Choqok::Post*> FacebookMicroBlog::toChoqokPost(FacebookAccount* account, QList<NotificationInfo> notifications) const
 {
   QList<Choqok::Post*> list ;
-  NotificationInfoPtr n;
-  
+  NotificationInfo n;
+
   foreach ( n, notifications)
   {
-	  NotificationInfo * notificationInfo = n.data();
+	  NotificationInfo * notificationInfo = &n;
 	  FacebookPost * post = new FacebookPost ();
 	  post->postId = assignOrNull(notificationInfo->id());
 	  post->author = toChoqokUser( account, notificationInfo->from());
-	  post->author.profileImageUrl = "https://graph.facebook.com/" + notificationInfo->from()->id() + "/picture" ; 
+	  post->author.profileImageUrl = "https://graph.facebook.com/" + notificationInfo->from().id() + "/picture" ;
 	  post->title = assignOrNull(notificationInfo->title());
-	  post->link = assignOrNull(notificationInfo->link());
+	  post->link = assignOrNull(notificationInfo->link().toString());
 	  post->type = "notification";
-	  post->appId = notificationInfo->application().isNull() ?  "" : notificationInfo->application()->id();
-	  post->appName = notificationInfo->application().isNull() ?  "" : notificationInfo->application()->name();
+	  post->appId = notificationInfo->application().id();
+	  post->appName = notificationInfo->application().name();
 	  post->creationDateTime = notificationInfo->createdTime().dateTime();
 	  post->updateDateTime = notificationInfo->updatedTime().dateTime();
 	  post->isRead = !(notificationInfo->unread());
-  
+
       //post->content = prepareStatus(post);
-      
+
 	  list.append(post);
   }
-  
+
   return list;
 }
 
@@ -593,18 +597,18 @@ void FacebookMicroBlog::createPostWithAttachment(Choqok::Account* theAccount, Ch
 
         QString mimeType = KMimeType::findByUrl( picUrl, 0, true )->name();
         QByteArray fileContentType = mimeType.toUtf8();;
-        
+
         QString uploadUrl;
         if ( mimeType.contains("video"))
           uploadUrl = QString("https://graph-video.facebook.com/%1/videos");
-        else  
+        else
           uploadUrl = QString("https://graph.facebook.com/%1/photos");
-          
+
         QString me = post->author.userId.compare("") == 0 ? QString("me") : post->author.userId;
         uploadUrl = uploadUrl.arg(me);
         KUrl url(uploadUrl);
-        
-        
+
+
         /*QUrl url(mediumToAttach);
 		KFileItem item(KFileItem::Unknown, KFileItem::Unknown, url, true);
 		mimeType = item.mimetype();*/
@@ -648,7 +652,7 @@ QMenu* FacebookMicroBlog::createActionsMenu(Choqok::Account* theAccount, QWidget
     directMessge->setData( theAccount->alias() );
     connect( directMessge, SIGNAL(triggered(bool)), SLOT(showPrivateMessageDialog()) );
     menu->addAction(directMessge);
-    
+
     KAction *addTimline = new KAction( KIcon("appointment-new"), i18n("Add a new Timeline...."), menu );
     addTimline->setData( theAccount->alias() );
     connect( addTimline, SIGNAL(triggered(bool)), SLOT(showAddTimelineDialog()) );
@@ -665,7 +669,7 @@ void FacebookMicroBlog::showPrivateMessageDialog( FacebookAccount *theAccount, c
         theAccount = qobject_cast<FacebookAccount*>( Choqok::AccountManager::self()->findAccount( act->data().toString() ) );
     }
     QString appId = FacebookEditAccountWidget::appID();
-    QString urlString = QString("https://www.facebook.com/dialog/send?app_id=%1&to=%2&link=http://choqok.gnufolks.org&redirect_uri=http://choqok.gnufolks.org/").arg(appId).arg(toUsername); 
+    QString urlString = QString("https://www.facebook.com/dialog/send?app_id=%1&to=%2&link=http://choqok.gnufolks.org&redirect_uri=http://choqok.gnufolks.org/").arg(appId).arg(toUsername);
     QUrl url(urlString);
     //QUrl choqokUrl("http://choqok.gnufolks.org");
     FacebookViewDialog * dialog = new FacebookViewDialog(url, Choqok::UI::Global::mainWindow(), "http://choqok.gnufolks.org");
@@ -680,7 +684,7 @@ void FacebookMicroBlog::showAddTimelineDialog(FacebookAccount *theAccount, const
         theAccount = qobject_cast<FacebookAccount*>(
                                     Choqok::AccountManager::self()->findAccount( act->data().toString() ) );
     }
-    
+
 	dialog = new FacebookInputDialog(theAccount, "Enter the \"Facebook Username\" OR \"Facebook Id\" of the Person/Group/Page whose feed you want to show on Choqok (Please note that we do not support lists yet)", "Add New Timeline", "Enter input here and press return or click OK", false, Choqok::UI::Global::mainWindow());
 	connect(dialog, SIGNAL(inputEntered(FacebookAccount*, QString)), this, SLOT(slotInputEntered(FacebookAccount*, QString)));
 	dialog->show();
@@ -689,18 +693,18 @@ void FacebookMicroBlog::showAddTimelineDialog(FacebookAccount *theAccount, const
 void FacebookMicroBlog::slotInputEntered(FacebookAccount *theAccount, QString id)
 {
 	disconnect(dialog, SIGNAL(inputEntered(FacebookAccount*, QString)), this, SLOT(slotInputEntered(FacebookAccount*, QString)));
-	
+
 	if (id.length() < 5 || id.contains(QRegExp("[^a-z0-9\\.]", Qt::CaseInsensitive ) ) )
 	{
 		KMessageBox::sorry(choqokMainWindow, i18n("Invalid Facebook Id. You can enter only alphanumeric character and a period"));
 		return;
 	}
-	
+
 	if ( id.compare(theAccount->id(), Qt::CaseInsensitive) == 0  )
 	{
 		KMessageBox::information(choqokMainWindow, i18n("This is your own Facebook Id. No Timelines added."));
 	}
-	
+
 	else
 	{
 		id = id.toLower();
@@ -713,8 +717,8 @@ void FacebookMicroBlog::slotInputEntered(FacebookAccount *theAccount, QString id
 
 void FacebookMicroBlog::userInfoJobDone(KJob* job)
 {
-	
-	
+
+
 	if (job->error())
 	{
 		KMessageBox::sorry(choqokMainWindow, i18n("Error retrievind Facebook User Info. The server said : %1").arg(job->errorString()));
@@ -723,18 +727,18 @@ void FacebookMicroBlog::userInfoJobDone(KJob* job)
 	UserInfoJob* uJob = dynamic_cast<UserInfoJob*>(job);
 
 	FacebookAccount* theAccount = mJobsAccount.take(job);
-	
-	UserInfoPtr userInfo = uJob->userInfo();
-	
-	if (theAccount->id().compare(userInfo->id(), Qt::CaseInsensitive) == 0)
+
+	UserInfo userInfo = uJob->userInfo();
+
+	if (theAccount->id().compare(userInfo.id(), Qt::CaseInsensitive) == 0)
 	{
 		KMessageBox::information(choqokMainWindow, i18n("This is your own Facebook Id. No Timelines added."));
 	}
-	
+
 	else
 	{
 		QStringList tms = theAccount->timelineNames();
-		QString timelineName = QString("%1/%2").arg(userInfo->name(),  userInfo->id());
+		QString timelineName = QString("%1/%2").arg(userInfo.name(),  userInfo.id());
 		tms.append(timelineName);
 		addTimelineName(timelineName);
 		theAccount->setTimelineNames(tms);

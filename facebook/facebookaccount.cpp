@@ -23,8 +23,10 @@
 
 #include "facebookaccount.h"
 #include "facebookmicroblog.h"
+
+#include <libkfbapi/userinfojob.h>
+
 #include <KDebug>
-#include <kfacebook/userinfojob.h>
 
 class FacebookAccount::Private
 {
@@ -41,24 +43,24 @@ FacebookAccount::FacebookAccount(FacebookMicroBlog* parent, const QString& alias
    d->accessToken = configGroup()->readEntry("AccessToken", QString());
    d->id = configGroup()->readEntry("Id", QString());
    d->name = configGroup()->readEntry("Name", QString());
-   d->timelineNames = configGroup()->readEntry("Timelines", QStringList());	
-   
+   d->timelineNames = configGroup()->readEntry("Timelines", QStringList());
+
    if( d->timelineNames.isEmpty() ){
         QStringList list = parent->timelineNames();
         list.removeOne("Profile");
         d->timelineNames = list;
     }
-    
+
     QStringList lists;
-    
+
     foreach(const QString & tm, timelineNames()){
         if(tm.contains('/'))
             lists.append(tm);
     }
-    
+
     if(!lists.isEmpty())
         parent->setUserTimelines(this, lists);
-}    
+}
 
 FacebookAccount::~FacebookAccount()
 {

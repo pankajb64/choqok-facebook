@@ -24,42 +24,46 @@
 #ifndef FACEBOOKWHOISWIDGET_H
 #define FACEBOOKWHOISWIDGET_H
 
-#include <QtCore/QUrl>
-#include <QtGui/QFrame>
+#include "facebookaccount.h"
+#include "facebookmicroblog.h"
+#include "facebookutil.h"
+
 #include <choqoktypes.h>
+#include <choqokappearancesettings.h>
+#include <choqoktools.h>
 #include "mediamanager.h"
-#include <KTextBrowser>
-#include <KUrl>
+#include <microblog.h>
+#include <notifymanager.h>
+
+#include <libkfbapi/userinfojob.h>
+#include <libkfbapi/userinfo.h>
+
+#include <KApplication>
+#include <KDebug>
 #include <kicon.h>
+#include <KIO/Job>
 #include <KNotification>
 #include <KProcess>
+#include <KTextBrowser>
 #include <KToolInvocation>
-#include <KApplication>
+#include <KUrl>
+#include <klocalizedstring.h>
+
+#include <QtCore/QPointer>
+#include <QtCore/QUrl>
+#include <QtGui/QFrame>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QVBoxLayout>
-#include "facebookaccount.h"
-#include <KIO/Job>
-#include <KDebug>
 #include <QtXml/QDomDocument>
-#include <klocalizedstring.h>
-#include <microblog.h>
-#include "facebookmicroblog.h"
-#include <choqokappearancesettings.h>
-#include <notifymanager.h>
-#include <choqoktools.h>
-#include <QtCore/QPointer>
-#include <kfacebook/userinfojob.h>
-#include <kfacebook/userinfo.h>
-#include "facebookutil.h"
 
 class FacebookWhoisWidget : public QFrame
 {
 	Q_OBJECT
-	
+
 	public:
     FacebookWhoisWidget( FacebookAccount* theAccount, const QString &userId,
                            const Choqok::Post* post,  QWidget *parent=0 );
-    
+
     void show(QPoint pos);
 
 protected Q_SLOTS:
@@ -72,14 +76,12 @@ protected Q_SLOTS:
 
 protected:
     void updateHtml();
-    
-
 
 private:
     void setupUi();
     void showForm();
     void loadUserInfo( );
-    
+
     KTextBrowser *wid;
     FacebookAccount *currentAccount;
     QFrame *waitFrame;
@@ -87,7 +89,7 @@ private:
     const Choqok::Post* currentPost;
     QString userId;
     QString errorMessage;
-    UserInfoPtr currentUserInfo;
+    UserInfo* currentUserInfo;
 };
 
 #endif
