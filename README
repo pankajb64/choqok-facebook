@@ -10,7 +10,7 @@ License:
 
 Requirements to build:
      Choqok
-     KFacebook ( https://projects.kde.org/projects/kdereview/libkfacebook/repository )
+     KFb API ( https://projects.kde.org/projects/extragear/libs/libkfbapi )
 
 How To Build The Project
 -=-=-=-=-=-=-=-=-=-=-=-=-=
