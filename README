@@ -24,6 +24,6 @@ $ sudo make install OR su -c 'make install'
 to uninstall the project:
 $ make uninstall or su -c 'make uninstall'
 
-Please check the Wiki for screenshots and more help.
+Please check the [Wiki] (https://github.com/pankajb64/choqok-facebook/wiki) for screenshots and more help.
 
 In case of any issues, feel free to email me.
