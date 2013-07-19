@@ -11,7 +11,7 @@ Choqok-Facebook
 ###License:
 GNU GPL v2 or v3 or Later
 
-###Requirements to build(both these must be built from their sources):
+###Requirements to build(both these must be built from source):
 
 
 * **Choqok** ( https://projects.kde.org/projects/extragear/network/choqok/ )
