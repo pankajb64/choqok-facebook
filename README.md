@@ -1,3 +1,5 @@
+[![Code Triagers Badge](https://www.codetriage.com/pankajb64/choqok-facebook/badges/users.svg)](https://www.codetriage.com/pankajb64/choqok-facebook)
+
 Choqok-Facebook
 ===============
 
