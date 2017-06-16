@@ -3,9 +3,9 @@
 Choqok-Facebook
 ===============
 
-**Choqok-Facebook** is a plugin for Choqok to access the social media site **[Facebook] (http://facebook.com)**.
+**Choqok-Facebook** is a plugin for Choqok to access the social media site **[Facebook](http://facebook.com)**.
 
-**Choqok** is a **[KDE] (http://kde.org) Micro-Blogging client** - More Information at http://choqok.gnufolks.org,
+**Choqok** is a **[KDE](http://kde.org) Micro-Blogging client** - More Information at http://choqok.gnufolks.org,
 
 ###Author:
 [Pankaj Bhambhani] (http://github.com/pankajb64) <<pankajb64@gmail.com>>
